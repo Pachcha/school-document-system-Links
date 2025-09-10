@@ -95,20 +95,6 @@
         .notification.warning { background: #f59e0b; color: white; }
         .notification.info { background: #3b82f6; color: white; }
         
-        /* File preview */
-        .file-preview-item {
-            position: relative;
-            border: 2px dashed #d1d5db;
-            border-radius: 8px;
-            padding: 12px;
-            background: #f9fafb;
-        }
-        
-        .file-preview-item:hover {
-            border-color: #3b82f6;
-            background: #eff6ff;
-        }
-        
         /* Cloud storage card styles */
         .cloud-card {
             transition: all 0.3s;
@@ -227,12 +213,6 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" data-menu-item="upload" class="sidebar-item flex items-center space-x-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 p-3 rounded">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <span>อัพโหลดเอกสาร</span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="#" data-menu-item="documents" class="sidebar-item flex items-center space-x-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 p-3 rounded">
                             <i class="fas fa-folder-open"></i>
                             <span>เอกสารทั้งหมด</span>
@@ -282,8 +262,8 @@
                 <div class="mt-6 p-4 bg-blue-50 rounded-lg">
                     <h3 class="text-sm font-semibold text-gray-700 mb-3">ทางลัด</h3>
                     <div class="space-y-2">
-                        <button class="w-full text-left text-sm text-blue-600 hover:text-blue-800">
-                            <i class="fas fa-plus-circle mr-2"></i>เอกสารใหม่
+                        <button onclick="showUploadRequestForm()" class="w-full text-left text-sm text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-plus-circle mr-2"></i>ขออัพโหลดเอกสาร
                         </button>
                         <button class="w-full text-left text-sm text-blue-600 hover:text-blue-800">
                             <i class="fas fa-tasks mr-2"></i>งานของฉัน
@@ -312,11 +292,11 @@
                     <div class="flex items-center">
                         <i class="fas fa-cloud text-blue-600 text-2xl mr-3"></i>
                         <div class="flex-1">
-                            <h4 class="text-blue-800 font-semibold">Cloud Storage เชื่อมต่อสำเร็จทุกกลุ่มงาน!</h4>
-                            <p class="text-blue-600 text-sm">ทุกกลุ่มงานได้เชื่อมต่อกับ Cloud Storage เรียบร้อยแล้ว สามารถเข้าถึงเอกสารได้ทุกที่ทุกเวลา</p>
+                            <h4 class="text-blue-800 font-semibold">ระบบแสดงเอกสารจาก Cloud Storage</h4>
+                            <p class="text-blue-600 text-sm">สามารถดูและดาวน์โหลดเอกสารจากทุกกลุ่มงานได้ | การอัพโหลดเอกสารใหม่กรุณาติดต่อเจ้าหน้าที่</p>
                         </div>
                         <button onclick="DocumentManager.showSection('cloud-storage')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
-                            <i class="fas fa-folder-open mr-1"></i>ดู Cloud Storage
+                            <i class="fas fa-folder-open mr-1"></i>ดูเอกสารทั้งหมด
                         </button>
                     </div>
                 </div>
@@ -407,20 +387,31 @@
             <div data-section="cloud-storage" class="fade-in hidden">
                 <div class="mb-6">
                     <h2 class="text-3xl font-bold text-gray-800 mb-2">
-                        <i class="fas fa-cloud text-blue-600 mr-3"></i>Cloud Storage ของแต่ละกลุ่มงาน
+                        <i class="fas fa-cloud text-blue-600 mr-3"></i>เอกสารจาก Cloud Storage
                     </h2>
-                    <p class="text-gray-600">เข้าถึงพื้นที่จัดเก็บเอกสารออนไลน์ของแต่ละกลุ่มงาน</p>
+                    <p class="text-gray-600">ดูและดาวน์โหลดเอกสารจากแต่ละกลุ่มงาน</p>
                 </div>
 
-                <!-- Cloud Storage Status -->
-                <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
-                    <div class="flex items-center">
-                        <i class="fas fa-check-circle text-green-600 text-xl mr-3"></i>
+                <!-- Access Info -->
+                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
+                    <div class="flex items-start">
+                        <i class="fas fa-info-circle text-yellow-600 text-xl mr-3 mt-1"></i>
                         <div>
-                            <h4 class="text-green-800 font-semibold">สถานะ: เชื่อมต่อสำเร็จ</h4>
-                            <p class="text-green-600 text-sm">ระบบ Cloud Storage ทำงานปกติ - อัพเดทล่าสุด: วันนี้ เวลา 10:30 น.</p>
+                            <h4 class="text-yellow-800 font-semibold">ข้อมูลการเข้าถึง</h4>
+                            <ul class="text-yellow-700 text-sm mt-2 space-y-1">
+                                <li>• <strong>ดู/ดาวน์โหลด:</strong> ทุกคนสามารถดูและดาวน์โหลดเอกสารได้</li>
+                                <li>• <strong>อัพโหลดเอกสาร:</strong> กรุณาติดต่อเจ้าหน้าที่ประจำกลุ่มงาน</li>
+                                <li>• <strong>แก้ไขเอกสาร:</strong> เฉพาะเจ้าหน้าที่ที่มีสิทธิ์เท่านั้น</li>
+                            </ul>
                         </div>
                     </div>
+                </div>
+
+                <!-- Request Upload Button -->
+                <div class="text-center mb-6">
+                    <button onclick="showUploadRequestForm()" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-lg">
+                        <i class="fas fa-plus-circle mr-2"></i>ขอให้อัพโหลดเอกสาร
+                    </button>
                 </div>
 
                 <!-- Cloud Storage Cards Grid -->
@@ -454,11 +445,17 @@
                             </div>
                             <div class="border-t pt-4">
                                 <p class="text-sm text-gray-600 mb-3">เอกสารล่าสุด: คำสั่งแต่งตั้งคณะกรรมการ</p>
-                                <a href="https://home.mycloud.com/action/share/415a910f-f8af-4f42-a182-01f11a40fd06" 
-                                   target="_blank" 
-                                   class="block w-full bg-purple-600 text-white text-center py-2 rounded-lg hover:bg-purple-700 transition">
-                                    <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ Cloud Storage
-                                </a>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <a href="https://home.mycloud.com/action/share/415a910f-f8af-4f42-a182-01f11a40fd06" 
+                                       target="_blank" 
+                                       class="bg-purple-600 text-white text-center py-2 rounded-lg hover:bg-purple-700 transition text-sm">
+                                        <i class="fas fa-eye mr-1"></i>ดูเอกสาร
+                                    </a>
+                                    <button onclick="showContactInfo('hr')" 
+                                            class="bg-gray-600 text-white text-center py-2 rounded-lg hover:bg-gray-700 transition text-sm">
+                                        <i class="fas fa-user mr-1"></i>ติดต่อ
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -492,11 +489,17 @@
                             </div>
                             <div class="border-t pt-4">
                                 <p class="text-sm text-gray-600 mb-3">เอกสารล่าสุด: งบประมาณประจำปี 2569</p>
-                                <a href="https://home.mycloud.com/action/share/b91896dc-2385-44ad-9a4d-a8beeb9cd717" 
-                                   target="_blank" 
-                                   class="block w-full bg-green-600 text-white text-center py-2 rounded-lg hover:bg-green-700 transition">
-                                    <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ Cloud Storage
-                                </a>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <a href="https://home.mycloud.com/action/share/b91896dc-2385-44ad-9a4d-a8beeb9cd717" 
+                                       target="_blank" 
+                                       class="bg-green-600 text-white text-center py-2 rounded-lg hover:bg-green-700 transition text-sm">
+                                        <i class="fas fa-eye mr-1"></i>ดูเอกสาร
+                                    </a>
+                                    <button onclick="showContactInfo('budget')" 
+                                            class="bg-gray-600 text-white text-center py-2 rounded-lg hover:bg-gray-700 transition text-sm">
+                                        <i class="fas fa-user mr-1"></i>ติดต่อ
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -530,11 +533,17 @@
                             </div>
                             <div class="border-t pt-4">
                                 <p class="text-sm text-gray-600 mb-3">เอกสารล่าสุด: ตารางสอนภาคเรียนที่ 2</p>
-                                <a href="https://home.mycloud.com/action/share/69aa0c0e-dd0a-45d1-86e3-83d62d3e3784" 
-                                   target="_blank" 
-                                   class="block w-full bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition">
-                                    <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ Cloud Storage
-                                </a>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <a href="https://home.mycloud.com/action/share/69aa0c0e-dd0a-45d1-86e3-83d62d3e3784" 
+                                       target="_blank" 
+                                       class="bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition text-sm">
+                                        <i class="fas fa-eye mr-1"></i>ดูเอกสาร
+                                    </a>
+                                    <button onclick="showContactInfo('academic')" 
+                                            class="bg-gray-600 text-white text-center py-2 rounded-lg hover:bg-gray-700 transition text-sm">
+                                        <i class="fas fa-user mr-1"></i>ติดต่อ
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -568,11 +577,17 @@
                             </div>
                             <div class="border-t pt-4">
                                 <p class="text-sm text-gray-600 mb-3">เอกสารล่าสุด: รายงานการประชุม</p>
-                                <a href="https://home.mycloud.com/action/share/0d00ff49-23da-4c92-aad3-f22428111f9e" 
-                                   target="_blank" 
-                                   class="block w-full bg-orange-600 text-white text-center py-2 rounded-lg hover:bg-orange-700 transition">
-                                    <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ Cloud Storage
-                                </a>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <a href="https://home.mycloud.com/action/share/0d00ff49-23da-4c92-aad3-f22428111f9e" 
+                                       target="_blank" 
+                                       class="bg-orange-600 text-white text-center py-2 rounded-lg hover:bg-orange-700 transition text-sm">
+                                        <i class="fas fa-eye mr-1"></i>ดูเอกสาร
+                                    </a>
+                                    <button onclick="showContactInfo('general')" 
+                                            class="bg-gray-600 text-white text-center py-2 rounded-lg hover:bg-gray-700 transition text-sm">
+                                        <i class="fas fa-user mr-1"></i>ติดต่อ
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -610,14 +625,26 @@
                 <!-- Instructions -->
                 <div class="mt-6 bg-blue-50 border-l-4 border-blue-500 p-4">
                     <h4 class="text-blue-800 font-semibold mb-2">
-                        <i class="fas fa-info-circle mr-2"></i>คำแนะนำการใช้งาน
+                        <i class="fas fa-info-circle mr-2"></i>วิธีการใช้งาน
                     </h4>
-                    <ul class="text-blue-700 text-sm space-y-1">
-                        <li>• คลิกปุ่ม "เข้าสู่ Cloud Storage" เพื่อเข้าถึงพื้นที่จัดเก็บของแต่ละกลุ่มงาน</li>
-                        <li>• ผู้ใช้จะต้องมีสิทธิ์ในการเข้าถึงตามที่กลุ่มงานกำหนด</li>
-                        <li>• สามารถอัพโหลด ดาวน์โหลด และแชร์ไฟล์ได้ตามสิทธิ์ที่ได้รับ</li>
-                        <li>• หากพบปัญหาในการเข้าใช้งาน กรุณาติดต่อผู้ดูแลระบบ</li>
-                    </ul>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <h5 class="text-blue-700 font-semibold mb-2">สำหรับผู้ใช้ทั่วไป:</h5>
+                            <ul class="text-blue-700 text-sm space-y-1">
+                                <li>• คลิก "ดูเอกสาร" เพื่อเข้าถึงเอกสารในแต่ละกลุ่มงาน</li>
+                                <li>• สามารถดูและดาวน์โหลดเอกสารได้ทันที</li>
+                                <li>• ใช้ระบบค้นหาเพื่อหาเอกสารที่ต้องการ</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5 class="text-blue-700 font-semibold mb-2">การขออัพโหลดเอกสาร:</h5>
+                            <ul class="text-blue-700 text-sm space-y-1">
+                                <li>• คลิกปุ่ม "ขอให้อัพโหลดเอกสาร"</li>
+                                <li>• กรอกรายละเอียดและส่งไฟล์ให้เจ้าหน้าที่</li>
+                                <li>• หรือติดต่อเจ้าหน้าที่ประจำกลุ่มงานโดยตรง</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -704,88 +731,6 @@
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">เอกสารตามประเภท</h3>
                         <canvas id="typeChart"></canvas>
                     </div>
-                </div>
-            </div>
-
-            <!-- Upload Section -->
-            <div data-section="upload" class="fade-in hidden">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">อัพโหลดเอกสาร</h2>
-                
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <form id="uploadForm">
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-gray-700 font-semibold mb-2">เลือกกลุ่มงาน <span class="text-red-500">*</span></label>
-                                <select id="department" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
-                                    <option value="">-- เลือกกลุ่มงาน --</option>
-                                    <option value="hr">กลุ่มงานบริหารงานบุคคล</option>
-                                    <option value="budget">กลุ่มงานบริหารแผนงานและงบประมาณ</option>
-                                    <option value="academic">กลุ่มบริหารงานวิชาการ</option>
-                                    <option value="general">กลุ่มบริหารงานทั่วไป</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="block text-gray-700 font-semibold mb-2">ประเภทเอกสาร <span class="text-red-500">*</span></label>
-                                <select id="docType" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
-                                    <option value="">-- เลือกประเภท --</option>
-                                    <option value="order">คำสั่ง</option>
-                                    <option value="letter">หนังสือราชการ</option>
-                                    <option value="announce">ประกาศ</option>
-                                    <option value="report">รายงาน</option>
-                                    <option value="plan">แผนงาน</option>
-                                    <option value="other">อื่นๆ</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="mt-6">
-                            <label class="block text-gray-700 font-semibold mb-2">ชื่อเอกสาร <span class="text-red-500">*</span></label>
-                            <input type="text" id="docTitle" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" placeholder="กรอกชื่อเอกสาร" required>
-                        </div>
-
-                        <div class="mt-6">
-                            <label class="block text-gray-700 font-semibold mb-2">คำอธิบาย</label>
-                            <textarea id="docDescription" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" rows="3" placeholder="กรอกคำอธิบายเพิ่มเติม"></textarea>
-                        </div>
-
-                        <div class="mt-6">
-                            <label class="block text-gray-700 font-semibold mb-2">แท็ก (คั่นด้วยคอมม่า)</label>
-                            <input type="text" id="docTags" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" placeholder="เช่น สำคัญ, ด่วน, 2568">
-                        </div>
-
-                        <div class="mt-6">
-                            <label class="block text-gray-700 font-semibold mb-2">อัพโหลดไฟล์ <span class="text-red-500">*</span></label>
-                            <div id="dropZone" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition cursor-pointer">
-                                <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
-                                <p class="text-gray-600">คลิกเพื่อเลือกไฟล์ หรือลากไฟล์มาวางที่นี่</p>
-                                <p class="text-sm text-gray-500 mt-2">รองรับไฟล์ JPG, PNG, PDF, DOC, DOCX, XLS, XLSX (ขนาดไม่เกิน 10MB)</p>
-                                <input type="file" id="fileInput" class="hidden" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" multiple required>
-                            </div>
-
-                            <!-- File Preview Area -->
-                            <div id="filePreview" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                                <!-- File previews will be added here -->
-                            </div>
-
-                            <!-- Upload Progress -->
-                            <div id="uploadProgress" class="hidden mt-4">
-                                <div class="bg-gray-200 rounded-full h-2">
-                                    <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all" style="width: 0%"></div>
-                                </div>
-                                <p class="text-sm text-gray-600 mt-2">กำลังอัพโหลด... <span id="uploadPercent">0</span>%</p>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-end space-x-4 mt-6">
-                            <button type="button" id="cancelUpload" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition">
-                                ยกเลิก
-                            </button>
-                            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                                <i class="fas fa-upload mr-2"></i>อัพโหลด
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </div>
 
@@ -1343,8 +1288,11 @@
                     return;
                 }
                 
-                showNotification('info', 'กำลังเปิดหน้าแก้ไขเอกสาร...');
-                // Navigate to edit page
+                showNotification('info', 'การแก้ไขเอกสารต้องทำผ่าน Cloud Storage โดยตรง');
+                // Open cloud storage link
+                if (AppState.cloudStorageLinks[doc.department]) {
+                    window.open(AppState.cloudStorageLinks[doc.department], '_blank');
+                }
             },
 
             deleteDocument(docId) {
@@ -1564,44 +1512,125 @@
             document.getElementById('previewModal').classList.add('hidden');
         }
 
-        function handleFiles(files) {
-            const preview = document.getElementById('filePreview');
-            preview.innerHTML = '';
+        // New functions for contact info and upload requests
+        function showContactInfo(department) {
+            const contacts = {
+                hr: {
+                    name: 'ฝ่ายบริหารงานบุคคล',
+                    phone: '02-XXX-XXXX ต่อ 101',
+                    email: 'hr@school.ac.th',
+                    line: '@hr-school'
+                },
+                budget: {
+                    name: 'ฝ่ายแผนงานและงบประมาณ',
+                    phone: '02-XXX-XXXX ต่อ 102',
+                    email: 'budget@school.ac.th',
+                    line: '@budget-school'
+                },
+                academic: {
+                    name: 'ฝ่ายบริหารงานวิชาการ',
+                    phone: '02-XXX-XXXX ต่อ 103',
+                    email: 'academic@school.ac.th',
+                    line: '@academic-school'
+                },
+                general: {
+                    name: 'ฝ่ายบริหารงานทั่วไป',
+                    phone: '02-XXX-XXXX ต่อ 104',
+                    email: 'general@school.ac.th',
+                    line: '@general-school'
+                }
+            };
+
+            const contact = contacts[department];
+            if (!contact) return;
+
+            const modal = document.getElementById('previewModal');
+            const content = document.getElementById('previewContent');
             
-            Array.from(files).forEach((file, index) => {
-                const fileSize = (file.size / 1024 / 1024).toFixed(2);
-                const fileExt = file.name.split('.').pop().toLowerCase();
-                
-                let icon = 'file-alt';
-                if (['jpg', 'jpeg', 'png'].includes(fileExt)) icon = 'file-image';
-                else if (fileExt === 'pdf') icon = 'file-pdf';
-                else if (['doc', 'docx'].includes(fileExt)) icon = 'file-word';
-                else if (['xls', 'xlsx'].includes(fileExt)) icon = 'file-excel';
-                
-                const previewItem = document.createElement('div');
-                previewItem.className = 'file-preview-item';
-                previewItem.innerHTML = `
-                    <div class="flex items-center justify-between">
+            content.innerHTML = `
+                <div class="text-center py-8">
+                    <i class="fas fa-address-card text-6xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-4">${contact.name}</h3>
+                    <div class="text-left max-w-md mx-auto space-y-3">
                         <div class="flex items-center">
-                            <i class="fas fa-${icon} text-2xl text-gray-500 mr-3"></i>
-                            <div>
-                                <p class="font-medium text-sm">${file.name}</p>
-                                <p class="text-xs text-gray-500">${fileSize} MB</p>
-                            </div>
+                            <i class="fas fa-phone text-green-500 mr-3 w-5"></i>
+                            <span>${contact.phone}</span>
                         </div>
-                        <button onclick="removeFile(${index})" class="text-red-500 hover:text-red-700">
-                            <i class="fas fa-times"></i>
-                        </button>
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-blue-500 mr-3 w-5"></i>
+                            <a href="mailto:${contact.email}" class="text-blue-600 hover:underline">${contact.email}</a>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fab fa-line text-green-500 mr-3 w-5"></i>
+                            <span>${contact.line}</span>
+                        </div>
                     </div>
-                `;
-                
-                preview.appendChild(previewItem);
-            });
+                    <p class="text-sm text-gray-600 mt-6">
+                        ติดต่อเพื่อขออัพโหลดเอกสารหรือสอบถามข้อมูลเพิ่มเติม
+                    </p>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
         }
 
-        function removeFile(index) {
-            // Implementation for removing file from preview
-            showNotification('info', 'ลบไฟล์ออกจากรายการแล้ว');
+        function showUploadRequestForm() {
+            const modal = document.getElementById('previewModal');
+            const content = document.getElementById('previewContent');
+            
+            content.innerHTML = `
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-cloud-upload-alt text-blue-500 mr-2"></i>แบบฟอร์มขออัพโหลดเอกสาร
+                    </h3>
+                    <form onsubmit="submitUploadRequest(event)">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">ชื่อผู้ขอ <span class="text-red-500">*</span></label>
+                                <input type="text" class="w-full px-4 py-2 border rounded-lg" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">กลุ่มงาน <span class="text-red-500">*</span></label>
+                                <select class="w-full px-4 py-2 border rounded-lg" required>
+                                    <option value="">-- เลือกกลุ่มงาน --</option>
+                                    <option value="hr">บริหารงานบุคคล</option>
+                                    <option value="budget">แผนงานและงบประมาณ</option>
+                                    <option value="academic">บริหารงานวิชาการ</option>
+                                    <option value="general">บริหารงานทั่วไป</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">ชื่อเอกสาร <span class="text-red-500">*</span></label>
+                                <input type="text" class="w-full px-4 py-2 border rounded-lg" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">รายละเอียด</label>
+                                <textarea class="w-full px-4 py-2 border rounded-lg" rows="3"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">อีเมลสำหรับติดต่อกลับ <span class="text-red-500">*</span></label>
+                                <input type="email" class="w-full px-4 py-2 border rounded-lg" required>
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-4 mt-6">
+                            <button type="button" onclick="closePreviewModal()" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                                ยกเลิก
+                            </button>
+                            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                <i class="fas fa-paper-plane mr-2"></i>ส่งคำขอ
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+        }
+
+        function submitUploadRequest(event) {
+            event.preventDefault();
+            closePreviewModal();
+            showNotification('success', 'ส่งคำขอสำเร็จ! เจ้าหน้าที่จะติดต่อกลับโดยเร็วที่สุด');
         }
 
         function showLoading() {
