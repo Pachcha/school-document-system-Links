@@ -1490,49 +1490,6 @@
                     document.getElementById('bulkDeleteBtn').classList.toggle('hidden');
                 });
 
-                // Upload form
-                const uploadForm = document.getElementById('uploadForm');
-                if (uploadForm) {
-                    uploadForm.addEventListener('submit', (e) => {
-                        e.preventDefault();
-                        this.handleUpload();
-                    });
-                }
-
-                // File input and drag & drop
-                const dropZone = document.getElementById('dropZone');
-                const fileInput = document.getElementById('fileInput');
-                
-                if (dropZone && fileInput) {
-                    dropZone.addEventListener('click', () => fileInput.click());
-                    
-                    dropZone.addEventListener('dragover', (e) => {
-                        e.preventDefault();
-                        dropZone.classList.add('border-blue-500', 'bg-blue-50');
-                    });
-                    
-                    dropZone.addEventListener('dragleave', () => {
-                        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
-                    });
-                    
-                    dropZone.addEventListener('drop', (e) => {
-                        e.preventDefault();
-                        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
-                        handleFiles(e.dataTransfer.files);
-                    });
-                    
-                    fileInput.addEventListener('change', (e) => {
-                        handleFiles(e.target.files);
-                    });
-                }
-
-                // Cancel upload
-                document.getElementById('cancelUpload')?.addEventListener('click', () => {
-                    document.getElementById('uploadForm').reset();
-                    document.getElementById('filePreview').innerHTML = '';
-                    this.showSection('announcement');
-                });
-
                 // Export button
                 document.getElementById('exportBtn')?.addEventListener('click', () => {
                     showNotification('info', 'กำลังส่งออกรายงาน...');
@@ -1552,52 +1509,7 @@
                 });
             },
 
-            handleUpload() {
-                const form = document.getElementById('uploadForm');
-                const formData = new FormData(form);
-                
-                // Show progress
-                const progressDiv = document.getElementById('uploadProgress');
-                const progressBar = document.getElementById('progressBar');
-                const progressText = document.getElementById('uploadPercent');
-                
-                progressDiv.classList.remove('hidden');
-                
-                // Simulate upload progress
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += 10;
-                    progressBar.style.width = progress + '%';
-                    progressText.textContent = progress;
-                    
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        setTimeout(() => {
-                            progressDiv.classList.add('hidden');
-                            showNotification('success', 'อัพโหลดเอกสารเรียบร้อยแล้ว!');
-                            form.reset();
-                            document.getElementById('filePreview').innerHTML = '';
-                            this.showSection('documents');
-                            
-                            // Add new document to state
-                            const newDoc = {
-                                id: AppState.documents.length + 1,
-                                title: document.getElementById('docTitle').value,
-                                type: document.getElementById('docType').value,
-                                department: document.getElementById('department').value,
-                                status: 'pending',
-                                date: new Date().toISOString().split('T')[0],
-                                owner: AppState.user.name,
-                                description: document.getElementById('docDescription').value,
-                                fileType: 'pdf',
-                                views: 0
-                            };
-                            AppState.documents.unshift(newDoc);
-                            this.loadDocuments();
-                        }, 500);
-                    }
-                }, 200);
-            }
+            // Removed handleUpload function as upload is not available
         };
 
         // Utility Functions
