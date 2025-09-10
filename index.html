@@ -3,9 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Document Portal</title>
+    <title>โรงเรียนพิษณุโลกปัญญานุกูล - School Document Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 
+    ############################################################
+    #  School Document Portal - โรงเรียนพิษณุโลกปัญญานุกูล
+    ############################################################
+    #  
+    #  คู่มือสำหรับงานโสตฯ:
+    #  
+    #  1. โลโก้โรงเรียน:
+    #     - ดาวน์โหลดจาก: https://home.mycloud.com/action/share/34c5eaaa-c4ba-4c41-9f5f-f8c70a931fce
+    #     - บันทึกเป็น "logo.png" ในโฟลเดอร์เดียวกับไฟล์นี้
+    #  
+    #  2. แก้ไขลิงก์ MyCloud:
+    #     - ดูบรรทัด 178-183 (ส่วน CLOUD_LINKS)
+    #     - เปลี่ยนลิงก์แต่ละฝ่ายตามที่ได้รับ
+    #  
+    #  3. ไฟล์ที่ต้องมี:
+    #     - index.html (ไฟล์นี้)
+    #     - logo.png (โลโก้โรงเรียน)
+    #  
+    ############################################################
+    -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
         
@@ -106,37 +128,104 @@
             66% { transform: translate(-20px, 20px) scale(0.9); }
         }
         
-        .typing {
-            overflow: hidden;
-            border-right: 3px solid white;
-            white-space: nowrap;
-            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
         }
         
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
         }
         
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: white; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s;
+            margin: 20px;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .doc-category {
+            transition: all 0.3s;
+        }
+        
+        .doc-category:hover {
+            transform: translateX(5px);
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5569d8 0%, #643a85 100%);
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== งานโสตฯ แก้ลิงก์ได้ที่นี่ ===== -->
+    <!-- ========================================= -->
+    <!-- ส่วนตั้งค่า: งานโสตฯ แก้ลิงก์ได้ที่นี่ -->
+    <!-- ========================================= -->
     <script>
+        // แก้ไขลิงก์ MyCloud ของแต่ละฝ่ายที่นี่
         const CLOUD_LINKS = {
-            hr: 'https://home.mycloud.com/action/share/415a910f-f8af-4f42-a182-01f11a40fd06',      // บุคคล
-            budget: 'https://home.mycloud.com/action/share/b91896dc-2385-44ad-9a4d-a8beeb9cd717',   // งบประมาณ  
-            academic: 'https://home.mycloud.com/action/share/69aa0c0e-dd0a-45d1-86e3-83d62d3e3784', // วิชาการ
-            general: 'https://home.mycloud.com/action/share/0d00ff49-23da-4c92-aad3-f22428111f9e'   // ทั่วไป
+            hr: 'https://home.mycloud.com/action/share/415a910f-f8af-4f42-a182-01f11a40fd06',      // บริหารงานบุคคล
+            budget: 'https://home.mycloud.com/action/share/b91896dc-2385-44ad-9a4d-a8beeb9cd717',   // แผนงานและงบประมาณ  
+            academic: 'https://home.mycloud.com/action/share/69aa0c0e-dd0a-45d1-86e3-83d62d3e3784', // บริหารงานวิชาการ
+            general: 'https://home.mycloud.com/action/share/0d00ff49-23da-4c92-aad3-f22428111f9e'   // บริหารงานทั่วไป
+        };
+        
+        // ข้อมูลโรงเรียน
+        const SCHOOL_INFO = {
+            name: 'โรงเรียนพิษณุโลกปัญญานุกูล',
+            address: '78 หมู่ 3 ตำบลมะขามสูง อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000',
+            phone: '0-5500-6290',
+            fax: '0-5500-6290 ต่อ 413',
+            email: 'plpanyaschool@gmail.com',
+            facebook: 'https://www.facebook.com/PhitsanulokPanyaSchool',
+            // งานโสตฯ: เปลี่ยน URL โลโก้ที่นี่ (ใส่ URL ของไฟล์โลโก้จริง)
+            logo: 'logo.png'  // แก้เป็น path ของไฟล์โลโก้จริง เช่น 'images/school-logo.png'
         };
     </script>
 
-    <!-- Background Blobs -->
+    <!-- Background Animation -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
         <div class="blob absolute top-0 left-0 w-96 h-96 bg-purple-400"></div>
         <div class="blob absolute bottom-0 right-0 w-96 h-96 bg-blue-400" style="animation-delay: 3s;"></div>
@@ -148,31 +237,61 @@
         <div class="glass shadow-2xl">
             <div class="max-w-6xl mx-auto px-6 py-8">
                 <div class="text-center">
-                    <div class="inline-block p-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-4 float-animation">
-                        <i class="fas fa-school text-4xl text-white"></i>
+                    <!-- School Logo -->
+                    <div class="inline-block mb-4 float-animation">
+                        <div class="bg-white rounded-2xl p-4 shadow-lg">
+                            <!-- 
+                            งานโสตฯ: ใส่ไฟล์โลโก้จริงที่นี่ 
+                            1. บันทึกไฟล์โลโก้ (logo.png หรือ logo.jpg) ไว้ในโฟลเดอร์เดียวกับไฟล์ HTML นี้
+                            2. เปลี่ยน src="logo.png" เป็นชื่อไฟล์โลโก้ของท่าน
+                            -->
+                            <img src="logo.png" 
+                                 alt="โลโก้โรงเรียนพิษณุโลกปัญญานุกูล" 
+                                 class="h-32 w-auto mx-auto"
+                                 onerror="this.style.display='none'; document.getElementById('backup-logo').style.display='block';">
+                            
+                            <!-- Backup Logo (แสดงเมื่อไม่พบไฟล์โลโก้) -->
+                            <div id="backup-logo" style="display:none;" class="inline-block">
+                                <div class="w-32 h-32 bg-gradient-to-br from-green-400 via-purple-500 to-yellow-400 rounded-2xl flex items-center justify-center">
+                                    <div class="text-white text-center">
+                                        <div class="text-3xl font-bold mb-1">พ.ล.น.</div>
+                                        <div class="text-xs">พิษณุโลกปัญญานุกูล</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                        School Document Portal
+                        โรงเรียนพิษณุโลกปัญญานุกูล
                     </h1>
                     <p class="text-gray-600 text-lg">ระบบจัดการเอกสารออนไลน์</p>
+                    <p class="text-gray-500 text-sm mt-2">School Document Portal</p>
                     
-                    <!-- Stats -->
+                    <!-- Stats Icons -->
                     <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl mx-auto">
                         <div class="text-center">
-                            <div class="text-2xl font-bold text-purple-600">4</div>
-                            <div class="text-xs text-gray-500">ฝ่ายงาน</div>
+                            <div class="text-2xl text-purple-600">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="text-xs text-gray-500">4 ฝ่ายงาน</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-2xl font-bold text-blue-600">100+</div>
-                            <div class="text-xs text-gray-500">เอกสาร</div>
+                            <div class="text-2xl text-blue-600">
+                                <i class="fas fa-folder-open"></i>
+                            </div>
+                            <div class="text-xs text-gray-500">เอกสารครบถ้วน</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-2xl font-bold text-green-600">24/7</div>
-                            <div class="text-xs text-gray-500">เข้าถึง</div>
+                            <div class="text-2xl text-green-600">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="text-xs text-gray-500">เข้าถึง 24/7</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-2xl font-bold text-orange-600">500+</div>
-                            <div class="text-xs text-gray-500">ผู้ใช้งาน</div>
+                            <div class="text-2xl text-orange-600">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="text-xs text-gray-500">ปลอดภัย</div>
                         </div>
                     </div>
                 </div>
@@ -183,23 +302,23 @@
     <!-- Main Content -->
     <main class="relative z-10 max-w-6xl mx-auto p-6 mt-8">
         
-        <!-- Quick Access -->
+        <!-- Quick Access Section -->
         <div class="glass rounded-2xl p-6 mb-8 shadow-xl">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-2xl font-semibold text-gray-800">
                     <i class="fas fa-rocket text-purple-600 mr-2"></i>
                     Quick Access
                 </h2>
-                <span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm font-medium">
+                <span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm font-medium pulse-icon">
                     <i class="fas fa-circle text-xs mr-1"></i>Online
                 </span>
             </div>
             <p class="text-gray-600 mb-6">เลือกฝ่ายงานเพื่อเข้าถึงเอกสาร</p>
             
-            <!-- Department Cards -->
+            <!-- Department Cards Grid -->
             <div class="grid md:grid-cols-2 gap-6">
                 
-                <!-- HR Card -->
+                <!-- บริหารงานบุคคล Card -->
                 <div class="card-hover">
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden shine">
                         <div class="gradient-hr p-6 text-white relative">
@@ -216,8 +335,8 @@
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-3 mb-4 text-sm text-gray-600">
-                                <span class="flex items-center"><i class="fas fa-folder mr-1 text-purple-500"></i>15 โฟลเดอร์</span>
-                                <span class="flex items-center"><i class="fas fa-file mr-1 text-purple-500"></i>45 ไฟล์</span>
+                                <span class="flex items-center"><i class="fas fa-folder mr-1 text-purple-500"></i>เอกสารบุคคล</span>
+                                <span class="flex items-center"><i class="fas fa-check-circle mr-1 text-green-500"></i>พร้อมใช้</span>
                             </div>
                             <div class="space-y-2 mb-4">
                                 <div class="flex items-center text-sm text-gray-600">
@@ -233,16 +352,21 @@
                                     แบบประเมิน
                                 </div>
                             </div>
-                            <a href="https://home.mycloud.com/action/share/415a910f-f8af-4f42-a182-01f11a40fd06" 
-                               target="_blank" 
-                               class="block w-full gradient-hr text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
-                                <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบเอกสาร
-                            </a>
+                            <div class="flex gap-2">
+                                <button onclick="showModal('hr')" 
+                                        class="flex-1 bg-purple-50 text-purple-600 text-center py-3 rounded-xl hover:bg-purple-100 transition-all font-medium">
+                                    <i class="fas fa-info-circle mr-2"></i>ดูรายละเอียด
+                                </button>
+                                <button onclick="window.open('https://home.mycloud.com/action/share/415a910f-f8af-4f42-a182-01f11a40fd06', '_blank')" 
+                                        class="flex-1 gradient-hr text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
+                                    <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบ
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Budget Card -->
+                <!-- แผนงานและงบประมาณ Card -->
                 <div class="card-hover">
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden shine">
                         <div class="gradient-budget p-6 text-white relative">
@@ -259,8 +383,8 @@
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-3 mb-4 text-sm text-gray-600">
-                                <span class="flex items-center"><i class="fas fa-folder mr-1 text-green-500"></i>10 โฟลเดอร์</span>
-                                <span class="flex items-center"><i class="fas fa-file mr-1 text-green-500"></i>38 ไฟล์</span>
+                                <span class="flex items-center"><i class="fas fa-folder mr-1 text-green-500"></i>เอกสารงบประมาณ</span>
+                                <span class="flex items-center"><i class="fas fa-check-circle mr-1 text-green-500"></i>พร้อมใช้</span>
                             </div>
                             <div class="space-y-2 mb-4">
                                 <div class="flex items-center text-sm text-gray-600">
@@ -276,16 +400,21 @@
                                     รายงานการเงิน
                                 </div>
                             </div>
-                            <a href="https://home.mycloud.com/action/share/b91896dc-2385-44ad-9a4d-a8beeb9cd717" 
-                               target="_blank" 
-                               class="block w-full gradient-budget text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
-                                <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบเอกสาร
-                            </a>
+                            <div class="flex gap-2">
+                                <button onclick="showModal('budget')" 
+                                        class="flex-1 bg-green-50 text-green-600 text-center py-3 rounded-xl hover:bg-green-100 transition-all font-medium">
+                                    <i class="fas fa-info-circle mr-2"></i>ดูรายละเอียด
+                                </button>
+                                <button onclick="window.open('https://home.mycloud.com/action/share/b91896dc-2385-44ad-9a4d-a8beeb9cd717', '_blank')" 
+                                        class="flex-1 gradient-budget text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
+                                    <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบ
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Academic Card -->
+                <!-- บริหารงานวิชาการ Card -->
                 <div class="card-hover">
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden shine">
                         <div class="gradient-academic p-6 text-white relative">
@@ -302,8 +431,8 @@
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-3 mb-4 text-sm text-gray-600">
-                                <span class="flex items-center"><i class="fas fa-folder mr-1 text-blue-500"></i>20 โฟลเดอร์</span>
-                                <span class="flex items-center"><i class="fas fa-file mr-1 text-blue-500"></i>78 ไฟล์</span>
+                                <span class="flex items-center"><i class="fas fa-folder mr-1 text-blue-500"></i>เอกสารวิชาการ</span>
+                                <span class="flex items-center"><i class="fas fa-check-circle mr-1 text-green-500"></i>พร้อมใช้</span>
                             </div>
                             <div class="space-y-2 mb-4">
                                 <div class="flex items-center text-sm text-gray-600">
@@ -319,16 +448,21 @@
                                     ผลการเรียน
                                 </div>
                             </div>
-                            <a href="https://home.mycloud.com/action/share/69aa0c0e-dd0a-45d1-86e3-83d62d3e3784" 
-                               target="_blank" 
-                               class="block w-full gradient-academic text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
-                                <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบเอกสาร
-                            </a>
+                            <div class="flex gap-2">
+                                <button onclick="showModal('academic')" 
+                                        class="flex-1 bg-blue-50 text-blue-600 text-center py-3 rounded-xl hover:bg-blue-100 transition-all font-medium">
+                                    <i class="fas fa-info-circle mr-2"></i>ดูรายละเอียด
+                                </button>
+                                <button onclick="window.open('https://home.mycloud.com/action/share/69aa0c0e-dd0a-45d1-86e3-83d62d3e3784', '_blank')" 
+                                        class="flex-1 gradient-academic text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
+                                    <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบ
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- General Card -->
+                <!-- บริหารงานทั่วไป Card -->
                 <div class="card-hover">
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden shine">
                         <div class="gradient-general p-6 text-white relative">
@@ -345,8 +479,8 @@
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-3 mb-4 text-sm text-gray-600">
-                                <span class="flex items-center"><i class="fas fa-folder mr-1 text-orange-500"></i>12 โฟลเดอร์</span>
-                                <span class="flex items-center"><i class="fas fa-file mr-1 text-orange-500"></i>56 ไฟล์</span>
+                                <span class="flex items-center"><i class="fas fa-folder mr-1 text-orange-500"></i>เอกสารทั่วไป</span>
+                                <span class="flex items-center"><i class="fas fa-check-circle mr-1 text-green-500"></i>พร้อมใช้</span>
                             </div>
                             <div class="space-y-2 mb-4">
                                 <div class="flex items-center text-sm text-gray-600">
@@ -362,15 +496,56 @@
                                     เอกสารทั่วไป
                                 </div>
                             </div>
-                            <a href="https://home.mycloud.com/action/share/0d00ff49-23da-4c92-aad3-f22428111f9e" 
-                               target="_blank" 
-                               class="block w-full gradient-general text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
-                                <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบเอกสาร
-                            </a>
+                            <div class="flex gap-2">
+                                <button onclick="showModal('general')" 
+                                        class="flex-1 bg-orange-50 text-orange-600 text-center py-3 rounded-xl hover:bg-orange-100 transition-all font-medium">
+                                    <i class="fas fa-info-circle mr-2"></i>ดูรายละเอียด
+                                </button>
+                                <button onclick="window.open('https://home.mycloud.com/action/share/0d00ff49-23da-4c92-aad3-f22428111f9e', '_blank')" 
+                                        class="flex-1 gradient-general text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
+                                    <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบ
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+            </div>
+        </div>
+
+        <!-- Document Guidelines Section -->
+        <div class="glass rounded-2xl p-6 mb-8 shadow-xl">
+            <div class="flex items-center mb-4">
+                <div class="p-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl text-white mr-4">
+                    <i class="fas fa-book text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800">คู่มือการจัดเก็บเอกสาร</h3>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gradient-to-br from-purple-50 to-blue-50 p-4 rounded-xl">
+                    <h4 class="font-semibold text-gray-800 mb-2">
+                        <i class="fas fa-file-alt text-purple-600 mr-2"></i>รูปแบบเอกสารที่แนะนำ
+                    </h4>
+                    <ul class="space-y-1 text-sm text-gray-600">
+                        <li><i class="fas fa-file-pdf text-red-500 mr-2"></i><strong>PDF:</strong> เอกสารทางการ</li>
+                        <li><i class="fas fa-file-excel text-green-500 mr-2"></i><strong>Excel:</strong> ตาราง/สถิติ</li>
+                        <li><i class="fas fa-file-word text-blue-500 mr-2"></i><strong>Word:</strong> เอกสารแก้ไขบ่อย</li>
+                        <li><i class="fas fa-image text-orange-500 mr-2"></i><strong>JPG/PNG:</strong> รูปภาพ (ไม่เกิน 2-3 MB)</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-50 to-yellow-50 p-4 rounded-xl">
+                    <h4 class="font-semibold text-gray-800 mb-2">
+                        <i class="fas fa-folder-plus text-green-600 mr-2"></i>การตั้งชื่อไฟล์
+                    </h4>
+                    <ul class="space-y-1 text-sm text-gray-600">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>ใช้รูปแบบ: ปี_เดือน_วัน_ชื่อกิจกรรม</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>แยกโฟลเดอร์ตามประเภท</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>ใช้ภาษาไทยหรืออังกฤษ</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>สำรองข้อมูลเป็นประจำ</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -414,6 +589,80 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Additional Tips -->
+            <div class="mt-6 p-4 bg-blue-50 rounded-xl">
+                <div class="flex items-start">
+                    <i class="fas fa-lightbulb text-blue-500 mr-3 mt-1"></i>
+                    <div class="text-sm text-gray-700">
+                        <strong>เคล็ดลับ:</strong> แนะนำให้ใช้ Google Chrome หรือ Firefox เพื่อประสิทธิภาพที่ดีที่สุด | 
+                        หากพบปัญหาการเข้าใช้งาน กรุณาติดต่องานโสตฯ โทร. 0-5500-6290 ต่อ 999
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Section -->
+        <div class="glass rounded-2xl p-6 shadow-xl mb-8">
+            <div class="flex items-center mb-4">
+                <div class="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-white mr-4">
+                    <i class="fas fa-map-marker-alt text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800">ติดต่อเรา</h3>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- ข้อมูลที่อยู่ -->
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-5 rounded-xl">
+                    <h4 class="font-semibold text-gray-800 mb-3">
+                        <i class="fas fa-school text-purple-600 mr-2"></i>โรงเรียนพิษณุโลกปัญญานุกูล
+                    </h4>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <div class="flex items-start">
+                            <i class="fas fa-map-pin text-purple-500 mr-2 mt-1"></i>
+                            <span>78 หมู่ 3 ตำบลมะขามสูง อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-phone text-green-500 mr-2"></i>
+                            <span>โทรศัพท์: 0-5500-6290</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-fax text-orange-500 mr-2"></i>
+                            <span>โทรสาร: 0-5500-6290 ต่อ 413</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ช่องทางการติดต่อออนไลน์ -->
+                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 p-5 rounded-xl">
+                    <h4 class="font-semibold text-gray-800 mb-3">
+                        <i class="fas fa-globe text-blue-600 mr-2"></i>ช่องทางออนไลน์
+                    </h4>
+                    <div class="space-y-2 text-sm">
+                        <a href="mailto:plpanyaschool@gmail.com" class="flex items-center text-gray-600 hover:text-blue-600 transition">
+                            <i class="fas fa-envelope text-red-500 mr-2"></i>
+                            <span>plpanyaschool@gmail.com</span>
+                        </a>
+                        <a href="https://www.facebook.com/PhitsanulokPanyaSchool" target="_blank" class="flex items-center text-gray-600 hover:text-blue-600 transition">
+                            <i class="fab fa-facebook text-blue-600 mr-2"></i>
+                            <span>Phitsanulok Panya School</span>
+                        </a>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-headset text-purple-500 mr-2"></i>
+                            <span>งานโสตฯ: ต่อ 999</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Google Maps Button -->
+            <div class="mt-4 text-center">
+                <a href="https://maps.google.com/?q=โรงเรียนพิษณุโลกปัญญานุกูล" target="_blank" 
+                   class="inline-flex items-center px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full hover:shadow-lg transition">
+                    <i class="fas fa-map-marked-alt mr-2"></i>
+                    ดูแผนที่ Google Maps
+                </a>
+            </div>
         </div>
     </main>
 
@@ -422,28 +671,438 @@
         <div class="glass">
             <div class="max-w-6xl mx-auto px-6 py-8">
                 <div class="text-center">
+                    <!-- Small Logo -->
+                    <div class="inline-block mb-3">
+                        <img src="logo.png" 
+                             alt="โลโก้โรงเรียน" 
+                             class="h-16 w-auto mx-auto opacity-80"
+                             onerror="this.style.display='none';">
+                    </div>
+                    
+                    <!-- School Name -->
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        โรงเรียนพิษณุโลกปัญญานุกูล
+                    </h3>
+                    
+                    <!-- Contact Icons -->
                     <div class="flex justify-center items-center gap-6 mb-4">
-                        <a href="#" class="text-gray-600 hover:text-purple-600 transition">
-                            <i class="fas fa-home text-xl"></i>
+                        <a href="https://maps.google.com/?q=โรงเรียนพิษณุโลกปัญญานุกูล" target="_blank" class="text-gray-600 hover:text-purple-600 transition" title="ที่อยู่">
+                            <i class="fas fa-map-marker-alt text-xl"></i>
                         </a>
-                        <a href="#" class="text-gray-600 hover:text-purple-600 transition">
+                        <a href="tel:055006290" class="text-gray-600 hover:text-purple-600 transition" title="โทรศัพท์">
                             <i class="fas fa-phone text-xl"></i>
                         </a>
-                        <a href="#" class="text-gray-600 hover:text-purple-600 transition">
+                        <a href="mailto:plpanyaschool@gmail.com" class="text-gray-600 hover:text-purple-600 transition" title="อีเมล">
                             <i class="fas fa-envelope text-xl"></i>
                         </a>
-                        <a href="#" class="text-gray-600 hover:text-purple-600 transition">
+                        <a href="https://www.facebook.com/PhitsanulokPanyaSchool" target="_blank" class="text-gray-600 hover:text-purple-600 transition" title="Facebook">
                             <i class="fab fa-facebook text-xl"></i>
                         </a>
                     </div>
+                    
+                    <!-- Address -->
+                    <p class="text-sm text-gray-600 mb-2">
+                        78 หมู่ 3 ตำบลมะขามสูง อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000
+                    </p>
+                    <p class="text-sm text-gray-600 mb-3">
+                        โทร: 0-5500-6290 | โทรสาร: 0-5500-6290 ต่อ 413
+                    </p>
+                    
+                    <!-- Divider -->
+                    <div class="w-32 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto mb-3"></div>
+                    
+                    <!-- Copyright -->
                     <p class="text-gray-600 mb-2">School Document Portal © 2024</p>
                     <p class="text-sm text-gray-500">
-                        <i class="fas fa-tools mr-2"></i>ติดต่องานโสตฯ: 02-XXX-XXXX ต่อ 999
+                        <i class="fas fa-tools mr-2"></i>ติดต่องานโสตฯ: 0-5500-6290 ต่อ 999
                     </p>
                 </div>
             </div>
         </div>
     </footer>
+
+    <!-- Modals -->
+    <!-- HR Modal -->
+    <div id="modal-hr" class="modal">
+        <div class="modal-content">
+            <div class="gradient-hr p-6 text-white rounded-t-2xl">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">
+                        <i class="fas fa-users mr-2"></i>กลุ่มบริหารงานบุคคล
+                    </h2>
+                    <button onclick="closeModal('hr')" class="text-white hover:bg-white/20 p-2 rounded-lg transition">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <!-- เอกสารที่ควรมี -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-file-alt text-purple-600 mr-2"></i>เอกสารที่ควรมี
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="doc-category bg-purple-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-purple-700 mb-2">ด้านบุคลากร</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• ทะเบียนประวัติครู (ก.พ.7)</li>
+                                <li>• คำสั่งแต่งตั้งต่างๆ</li>
+                                <li>• สัญญาจ้าง/คำสั่งบรรจุ</li>
+                                <li>• บัญชีเงินเดือน/ค่าจ้าง</li>
+                                <li>• ใบลา (ป่วย/กิจ/พักผ่อน)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="doc-category bg-purple-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-purple-700 mb-2">ด้านพัฒนาบุคลากร</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• แผนพัฒนาบุคลากร</li>
+                                <li>• เอกสารการอบรม/สัมมนา</li>
+                                <li>• ผลงานทางวิชาการ</li>
+                                <li>• แบบประเมินผลการปฏิบัติงาน</li>
+                                <li>• Portfolio ครู</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="doc-category bg-purple-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-purple-700 mb-2">ด้านสวัสดิการ</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• ประกันสังคม</li>
+                                <li>• ประกันสุขภาพ</li>
+                                <li>• กองทุนสำรองเลี้ยงชีพ</li>
+                                <li>• สวัสดิการต่างๆ</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- รูปภาพที่ควรมี -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-image text-purple-600 mr-2"></i>รูปภาพที่ควรมี
+                    </h3>
+                    <div class="bg-purple-50 p-4 rounded-xl">
+                        <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                            <div>• รูปบุคลากรรายบุคคล</div>
+                            <div>• รูปกิจกรรมพัฒนาบุคลากร</div>
+                            <div>• รูปการอบรม/สัมมนา</div>
+                            <div>• แผนผังโครงสร้างองค์กร</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="window.open('https://home.mycloud.com/action/share/415a910f-f8af-4f42-a182-01f11a40fd06', '_blank')" 
+                        class="w-full gradient-hr text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
+                    <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบเอกสาร MyCloud
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Budget Modal -->
+    <div id="modal-budget" class="modal">
+        <div class="modal-content">
+            <div class="gradient-budget p-6 text-white rounded-t-2xl">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">
+                        <i class="fas fa-chart-line mr-2"></i>กลุ่มแผนงานและงบประมาณ
+                    </h2>
+                    <button onclick="closeModal('budget')" class="text-white hover:bg-white/20 p-2 rounded-lg transition">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <!-- เอกสารที่ควรมี -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-file-alt text-green-600 mr-2"></i>เอกสารที่ควรมี
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="doc-category bg-green-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-green-700 mb-2">ด้านแผนงาน</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• แผนพัฒนาการศึกษา 4 ปี</li>
+                                <li>• แผนปฏิบัติการประจำปี</li>
+                                <li>• แผนกลยุทธ์</li>
+                                <li>• ปฏิทินปฏิบัติงาน</li>
+                                <li>• โครงการ/กิจกรรมประจำปี</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="doc-category bg-green-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-green-700 mb-2">ด้านงบประมาณ</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• คำขอตั้งงบประมาณ</li>
+                                <li>• แผนการใช้จ่ายงบประมาณ</li>
+                                <li>• รายงานการเงินรายไตรมาส</li>
+                                <li>• ใบเสร็จรับเงิน/ใบสำคัญจ่าย</li>
+                                <li>• ทะเบียนคุมงบประมาณ</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="doc-category bg-green-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-green-700 mb-2">ด้านติดตามประเมินผล</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• รายงาน SAR</li>
+                                <li>• รายงานผลการดำเนินงาน</li>
+                                <li>• สถิติต่างๆ</li>
+                                <li>• ผลการประเมินโครงการ</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- รูปภาพที่ควรมี -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-image text-green-600 mr-2"></i>รูปภาพที่ควรมี
+                    </h3>
+                    <div class="bg-green-50 p-4 rounded-xl">
+                        <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                            <div>• กราฟแสดงงบประมาณ</div>
+                            <div>• Infographic แผนงาน</div>
+                            <div>• Dashboard การใช้งบประมาณ</div>
+                            <div>• รูปกิจกรรมตามโครงการ</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="window.open('https://home.mycloud.com/action/share/b91896dc-2385-44ad-9a4d-a8beeb9cd717', '_blank')" 
+                        class="w-full gradient-budget text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
+                    <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบเอกสาร MyCloud
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Academic Modal -->
+    <div id="modal-academic" class="modal">
+        <div class="modal-content">
+            <div class="gradient-academic p-6 text-white rounded-t-2xl">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">
+                        <i class="fas fa-graduation-cap mr-2"></i>กลุ่มบริหารงานวิชาการ
+                    </h2>
+                    <button onclick="closeModal('academic')" class="text-white hover:bg-white/20 p-2 rounded-lg transition">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <!-- เอกสารที่ควรมี -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-file-alt text-blue-600 mr-2"></i>เอกสารที่ควรมี
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="doc-category bg-blue-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-blue-700 mb-2">ด้านหลักสูตร</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• หลักสูตรสถานศึกษา</li>
+                                <li>• โครงสร้างหลักสูตร</li>
+                                <li>• คำอธิบายรายวิชา</li>
+                                <li>• แผนการจัดการเรียนรู้</li>
+                                <li>• ตารางเรียน/ตารางสอน</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="doc-category bg-blue-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-blue-700 mb-2">ด้านการวัดผล</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• ระเบียบการวัดผล</li>
+                                <li>• แบบทดสอบ/ข้อสอบ</li>
+                                <li>• ผลการเรียน (ปพ.1-9)</li>
+                                <li>• สถิติผลการเรียน</li>
+                                <li>• รายงานผล O-NET/NT</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="doc-category bg-blue-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-blue-700 mb-2">ด้านกิจกรรมวิชาการ</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• โครงการส่งเสริมวิชาการ</li>
+                                <li>• ผลงานนักเรียน</li>
+                                <li>• การแข่งขันทางวิชาการ</li>
+                                <li>• สื่อการเรียนการสอน</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- รูปภาพที่ควรมี -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-image text-blue-600 mr-2"></i>รูปภาพที่ควรมี
+                    </h3>
+                    <div class="bg-blue-50 p-4 rounded-xl">
+                        <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                            <div>• รูปห้องเรียน/ห้องปฏิบัติการ</div>
+                            <div>• รูปกิจกรรมการเรียนการสอน</div>
+                            <div>• รูปผลงานนักเรียน</div>
+                            <div>• รูปรับรางวัลทางวิชาการ</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="window.open('https://home.mycloud.com/action/share/69aa0c0e-dd0a-45d1-86e3-83d62d3e3784', '_blank')" 
+                        class="w-full gradient-academic text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
+                    <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบเอกสาร MyCloud
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- General Modal -->
+    <div id="modal-general" class="modal">
+        <div class="modal-content">
+            <div class="gradient-general p-6 text-white rounded-t-2xl">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">
+                        <i class="fas fa-cogs mr-2"></i>กลุ่มบริหารงานทั่วไป
+                    </h2>
+                    <button onclick="closeModal('general')" class="text-white hover:bg-white/20 p-2 rounded-lg transition">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <!-- เอกสารที่ควรมี -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-file-alt text-orange-600 mr-2"></i>เอกสารที่ควรมี
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="doc-category bg-orange-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-orange-700 mb-2">ด้านธุรการ</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• หนังสือราชการ (รับ-ส่ง)</li>
+                                <li>• ระเบียบ/ข้อบังคับโรงเรียน</li>
+                                <li>• คู่มือนักเรียน/ผู้ปกครอง</li>
+                                <li>• ประกาศต่างๆ</li>
+                                <li>• รายงานการประชุม</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="doc-category bg-orange-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-orange-700 mb-2">ด้านอาคารสถานที่</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• แผนผังโรงเรียน</li>
+                                <li>• ทะเบียนครุภัณฑ์</li>
+                                <li>• แผนซ่อมบำรุง</li>
+                                <li>• บันทึกการใช้ห้อง/อาคาร</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="doc-category bg-orange-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-orange-700 mb-2">ด้านความสัมพันธ์ชุมชน</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• ทำเนียบผู้ปกครอง</li>
+                                <li>• ข่าวสาร/จดหมายข่าว</li>
+                                <li>• กิจกรรมชุมชนสัมพันธ์</li>
+                                <li>• เอกสาร MOU</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="doc-category bg-orange-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-orange-700 mb-2">ด้านความปลอดภัย</h4>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• แผนความปลอดภัย</li>
+                                <li>• คู่มือ/แผนอพยพ</li>
+                                <li>• บันทึกอุบัติเหตุ</li>
+                                <li>• ข้อมูลประกันอุบัติเหตุ</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- รูปภาพที่ควรมี -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-image text-orange-600 mr-2"></i>รูปภาพที่ควรมี
+                    </h3>
+                    <div class="bg-orange-50 p-4 rounded-xl">
+                        <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                            <div>• รูปอาคารสถานที่</div>
+                            <div>• รูปกิจกรรมโรงเรียน</div>
+                            <div>• รูปงานประชาสัมพันธ์</div>
+                            <div>• แผนผังโรงเรียน</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="window.open('https://home.mycloud.com/action/share/0d00ff49-23da-4c92-aad3-f22428111f9e', '_blank')" 
+                        class="w-full gradient-general text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
+                    <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบเอกสาร MyCloud
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal Functions
+        function showModal(department) {
+            const modal = document.getElementById('modal-' + department);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(department) {
+            const modal = document.getElementById('modal-' + department);
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+        
+        // Auto update current year
+        document.addEventListener('DOMContentLoaded', function() {
+            const year = new Date().getFullYear();
+            const copyrightElements = document.querySelectorAll('footer p');
+            copyrightElements.forEach(el => {
+                el.innerHTML = el.innerHTML.replace('2024', year);
+            });
+        });
+        
+        // Smooth scroll effect
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Add loading animation
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
 
 </body>
 </html>
