@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ค้นหาเอกสารโรงเรียน</title>
+    <title>ระบบเอกสารโรงเรียน</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { font-family: 'Sarabun', 'Prompt', sans-serif; }
+        .doc-card { transition: all 0.3s; }
+        .doc-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-50">
 
-    <!-- ส่วนที่งานโสตฯ แก้ไขได้ง่ายๆ -->
+    <!-- ============================================= -->
+    <!-- ส่วนที่ 1: ตั้งค่า (งานโสตฯ แก้ไขได้ที่นี่) -->
+    <!-- ============================================= -->
     <script>
-        // ========== แก้ไขลิงก์ Cloud Storage ที่นี่ ==========
+        // ========== 1. แก้ไขลิงก์ MyCloud ที่นี่ ==========
         const CLOUD_LINKS = {
             hr: 'https://home.mycloud.com/action/share/415a910f-f8af-4f42-a182-01f11a40fd06',      // บริหารงานบุคคล
             budget: 'https://home.mycloud.com/action/share/b91896dc-2385-44ad-9a4d-a8beeb9cd717',   // แผนงานและงบประมาณ  
@@ -22,153 +26,300 @@
             general: 'https://home.mycloud.com/action/share/0d00ff49-23da-4c92-aad3-f22428111f9e'   // บริหารงานทั่วไป
         };
 
-        // ========== เพิ่มเอกสารใหม่ที่นี่ ==========
+        // ========== 2. เพิ่มรายชื่อเอกสารที่นี่ ==========
         const DOCUMENTS = [
-            // บริหารงานบุคคล
-            { title: 'คำสั่งแต่งตั้งคณะกรรมการ', department: 'hr', type: 'คำสั่ง', date: '10/09/2568' },
-            { title: 'แบบประเมินประสิทธิภาพ', department: 'hr', type: 'แบบฟอร์ม', date: '09/09/2568' },
-            { title: 'ตารางเวรประจำเดือน', department: 'hr', type: 'ตาราง', date: '08/09/2568' },
+            // ===== กลุ่มบริหารงานบุคคล =====
+            { id: 1, title: 'คำสั่งแต่งตั้งคณะกรรมการประเมิน', department: 'hr', type: 'คำสั่ง', date: '10/09/2568', important: true },
+            { id: 2, title: 'แบบประเมินประสิทธิภาพการปฏิบัติงาน', department: 'hr', type: 'แบบฟอร์ม', date: '09/09/2568' },
+            { id: 3, title: 'ตารางเวรประจำเดือน กันยายน 2568', department: 'hr', type: 'ตาราง', date: '08/09/2568' },
+            { id: 4, title: 'ประกาศรับสมัครครูอัตราจ้าง', department: 'hr', type: 'ประกาศ', date: '07/09/2568', important: true },
+            { id: 5, title: 'คู่มือการลาและการขาดราชการ', department: 'hr', type: 'คู่มือ', date: '06/09/2568' },
             
-            // แผนงานและงบประมาณ
-            { title: 'แผนปฏิบัติการประจำปี 2569', department: 'budget', type: 'แผนงาน', date: '10/09/2568' },
-            { title: 'รายงานการใช้งบประมาณ', department: 'budget', type: 'รายงาน', date: '09/09/2568' },
-            { title: 'แบบขออนุมัติงบประมาณ', department: 'budget', type: 'แบบฟอร์ม', date: '08/09/2568' },
+            // ===== กลุ่มแผนงานและงบประมาณ =====
+            { id: 6, title: 'แผนปฏิบัติการประจำปี 2569', department: 'budget', type: 'แผนงาน', date: '10/09/2568', important: true },
+            { id: 7, title: 'รายงานการใช้งบประมาณ Q3/2568', department: 'budget', type: 'รายงาน', date: '09/09/2568' },
+            { id: 8, title: 'แบบขออนุมัติงบประมาณ', department: 'budget', type: 'แบบฟอร์ม', date: '08/09/2568' },
+            { id: 9, title: 'สรุปงบประมาณคงเหลือ', department: 'budget', type: 'รายงาน', date: '07/09/2568' },
+            { id: 10, title: 'คู่มือการเบิกจ่ายงบประมาณ', department: 'budget', type: 'คู่มือ', date: '06/09/2568' },
             
-            // บริหารงานวิชาการ
-            { title: 'ตารางสอนภาคเรียนที่ 2/2568', department: 'academic', type: 'ตาราง', date: '10/09/2568' },
-            { title: 'คู่มือการวัดผลประเมินผล', department: 'academic', type: 'คู่มือ', date: '09/09/2568' },
-            { title: 'ปฏิทินวิชาการ 2568', department: 'academic', type: 'ปฏิทิน', date: '08/09/2568' },
-            { title: 'แบบฟอร์มขอสอบแก้ตัว', department: 'academic', type: 'แบบฟอร์ม', date: '07/09/2568' },
+            // ===== กลุ่มบริหารงานวิชาการ =====
+            { id: 11, title: 'ตารางสอนภาคเรียนที่ 2/2568', department: 'academic', type: 'ตาราง', date: '10/09/2568', important: true },
+            { id: 12, title: 'คู่มือการวัดผลประเมินผล', department: 'academic', type: 'คู่มือ', date: '09/09/2568' },
+            { id: 13, title: 'ปฏิทินวิชาการ 2568', department: 'academic', type: 'ปฏิทิน', date: '08/09/2568', important: true },
+            { id: 14, title: 'แบบฟอร์มขอสอบแก้ตัว', department: 'academic', type: 'แบบฟอร์ม', date: '07/09/2568' },
+            { id: 15, title: 'ผลการเรียนภาคเรียนที่ 1/2568', department: 'academic', type: 'รายงาน', date: '06/09/2568' },
+            { id: 16, title: 'หลักสูตรสถานศึกษา 2568', department: 'academic', type: 'เอกสาร', date: '05/09/2568' },
             
-            // บริหารงานทั่วไป
-            { title: 'ระเบียบการแต่งกายนักเรียน', department: 'general', type: 'ระเบียบ', date: '10/09/2568' },
-            { title: 'แบบขอใช้ห้องประชุม', department: 'general', type: 'แบบฟอร์ม', date: '09/09/2568' },
-            { title: 'คู่มือนักเรียน 2568', department: 'general', type: 'คู่มือ', date: '08/09/2568' }
+            // ===== กลุ่มบริหารงานทั่วไป =====
+            { id: 17, title: 'ระเบียบการแต่งกายนักเรียน', department: 'general', type: 'ระเบียบ', date: '10/09/2568' },
+            { id: 18, title: 'แบบขอใช้ห้องประชุม', department: 'general', type: 'แบบฟอร์ม', date: '09/09/2568' },
+            { id: 19, title: 'คู่มือนักเรียน ปีการศึกษา 2568', department: 'general', type: 'คู่มือ', date: '08/09/2568', important: true },
+            { id: 20, title: 'ประกาศวันหยุดประจำปี 2568', department: 'general', type: 'ประกาศ', date: '07/09/2568' },
+            { id: 21, title: 'แผนป้องกันภัยพิบัติ', department: 'general', type: 'แผนงาน', date: '06/09/2568' }
         ];
+
+        // ========== 3. ข้อมูลติดต่อ (ถ้าต้องการแสดง) ==========
+        const SCHOOL_INFO = {
+            name: 'โรงเรียน...........',
+            phone: '02-XXX-XXXX',
+            email: 'school@example.ac.th',
+            address: 'ที่อยู่โรงเรียน'
+        };
     </script>
 
-    <!-- Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 shadow-lg">
-        <div class="max-w-6xl mx-auto">
-            <h1 class="text-2xl font-bold flex items-center">
-                <i class="fas fa-school mr-3"></i>
-                ระบบค้นหาเอกสารโรงเรียน
-            </h1>
-            <p class="text-blue-100 text-sm mt-1">ค้นหา • ดู • ดาวน์โหลด</p>
-        </div>
-    </div>
+    <!-- ============================================= -->
+    <!-- ส่วนที่ 2: หน้าเว็บแอพ -->
+    <!-- ============================================= -->
 
-    <!-- Search Bar -->
-    <div class="bg-white shadow-md sticky top-0 z-10">
-        <div class="max-w-6xl mx-auto p-4">
-            <div class="relative">
-                <input 
-                    type="text" 
-                    id="searchInput"
-                    placeholder="พิมพ์ชื่อเอกสารที่ต้องการค้นหา..." 
-                    class="w-full px-4 py-3 pl-12 text-lg border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
-                >
-                <i class="fas fa-search absolute left-4 top-4 text-gray-400 text-xl"></i>
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-school text-3xl"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">ระบบเอกสารโรงเรียน</h1>
+                        <p class="text-blue-100 text-sm">ค้นหา • ดู • ดาวน์โหลด</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <span class="text-sm"><i class="fas fa-phone mr-2"></i>02-XXX-XXXX</span>
+                    <span class="text-sm"><i class="fas fa-envelope mr-2"></i>school@example.ac.th</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <div class="bg-white shadow-md sticky top-0 z-20">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex flex-col md:flex-row gap-4">
+                <!-- Search Box -->
+                <div class="flex-1 relative">
+                    <input 
+                        type="text" 
+                        id="searchInput"
+                        placeholder="🔍 พิมพ์ชื่อเอกสารที่ต้องการค้นหา..." 
+                        class="w-full px-4 py-3 pl-12 text-lg border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                    >
+                    <i class="fas fa-search absolute left-4 top-4 text-gray-400"></i>
+                </div>
+                <!-- Filter Buttons -->
+                <div class="flex gap-2">
+                    <select id="typeFilter" class="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                        <option value="">ทุกประเภท</option>
+                        <option value="คำสั่ง">คำสั่ง</option>
+                        <option value="แบบฟอร์ม">แบบฟอร์ม</option>
+                        <option value="ตาราง">ตาราง</option>
+                        <option value="รายงาน">รายงาน</option>
+                        <option value="คู่มือ">คู่มือ</option>
+                        <option value="ประกาศ">ประกาศ</option>
+                        <option value="แผนงาน">แผนงาน</option>
+                    </select>
+                    <button onclick="clearAll()" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                        <i class="fas fa-times mr-2"></i>ล้าง
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="max-w-6xl mx-auto p-4">
+    <div class="container mx-auto px-4 py-6">
         
-        <!-- Quick Access Buttons -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-            <button onclick="filterDepartment('all')" class="bg-gray-600 text-white p-4 rounded-lg hover:bg-gray-700 transition">
+        <!-- Department Quick Access -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+            <button onclick="filterDepartment('all')" id="btn-all" class="dept-btn bg-gray-600 text-white p-4 rounded-lg hover:bg-gray-700 transition">
                 <i class="fas fa-th-large text-2xl mb-2"></i>
                 <p class="font-semibold">ทั้งหมด</p>
-                <p class="text-xs opacity-90">All</p>
+                <p class="text-xs opacity-90" id="count-all">0 เอกสาร</p>
             </button>
-            <button onclick="filterDepartment('hr')" class="bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700 transition">
+            <button onclick="filterDepartment('hr')" id="btn-hr" class="dept-btn bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700 transition">
                 <i class="fas fa-users text-2xl mb-2"></i>
                 <p class="font-semibold">บุคคล</p>
-                <p class="text-xs opacity-90">HR</p>
+                <p class="text-xs opacity-90" id="count-hr">0 เอกสาร</p>
             </button>
-            <button onclick="filterDepartment('budget')" class="bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 transition">
+            <button onclick="filterDepartment('budget')" id="btn-budget" class="dept-btn bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 transition">
                 <i class="fas fa-chart-line text-2xl mb-2"></i>
                 <p class="font-semibold">งบประมาณ</p>
-                <p class="text-xs opacity-90">Budget</p>
+                <p class="text-xs opacity-90" id="count-budget">0 เอกสาร</p>
             </button>
-            <button onclick="filterDepartment('academic')" class="bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition">
+            <button onclick="filterDepartment('academic')" id="btn-academic" class="dept-btn bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition">
                 <i class="fas fa-graduation-cap text-2xl mb-2"></i>
                 <p class="font-semibold">วิชาการ</p>
-                <p class="text-xs opacity-90">Academic</p>
+                <p class="text-xs opacity-90" id="count-academic">0 เอกสาร</p>
+            </button>
+            <button onclick="filterDepartment('general')" id="btn-general" class="dept-btn bg-orange-600 text-white p-4 rounded-lg hover:bg-orange-700 transition">
+                <i class="fas fa-cogs text-2xl mb-2"></i>
+                <p class="font-semibold">ทั่วไป</p>
+                <p class="text-xs opacity-90" id="count-general">0 เอกสาร</p>
             </button>
         </div>
 
-        <!-- Document Count -->
-        <div class="bg-white rounded-lg p-3 mb-4 flex items-center justify-between">
-            <span class="text-gray-600">พบเอกสาร <span id="docCount" class="font-bold text-blue-600">0</span> รายการ</span>
-            <button onclick="clearFilter()" class="text-sm text-blue-600 hover:text-blue-800">
-                <i class="fas fa-times mr-1"></i>ล้างการค้นหา
-            </button>
+        <!-- Important Documents (Optional) -->
+        <div id="importantDocs" class="mb-6 hidden">
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-lg">
+                <h3 class="text-lg font-semibold text-yellow-800 mb-3">
+                    <i class="fas fa-star mr-2"></i>เอกสารสำคัญ
+                </h3>
+                <div id="importantList" class="grid md:grid-cols-2 gap-2">
+                    <!-- Important docs will be here -->
+                </div>
+            </div>
         </div>
 
-        <!-- Documents List -->
-        <div id="documentsList" class="space-y-3">
-            <!-- Documents will be inserted here by JavaScript -->
+        <!-- Document Count & View Options -->
+        <div class="bg-white rounded-lg p-3 mb-4 flex items-center justify-between shadow">
+            <div class="flex items-center gap-4">
+                <span class="text-gray-600">พบเอกสาร <span id="docCount" class="font-bold text-blue-600 text-xl">0</span> รายการ</span>
+                <span id="filterStatus" class="text-sm text-gray-500"></span>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="setView('grid')" id="viewGrid" class="px-3 py-1 bg-blue-600 text-white rounded">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button onclick="setView('list')" id="viewList" class="px-3 py-1 bg-gray-300 text-gray-600 rounded">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
         </div>
 
-        <!-- No Results Message -->
-        <div id="noResults" class="hidden bg-white rounded-lg p-8 text-center">
+        <!-- Documents Container -->
+        <div id="documentsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Documents will be inserted here -->
+        </div>
+
+        <!-- No Results -->
+        <div id="noResults" class="hidden bg-white rounded-lg p-12 text-center shadow">
             <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
-            <p class="text-gray-500 text-lg">ไม่พบเอกสารที่ค้นหา</p>
+            <p class="text-gray-500 text-xl">ไม่พบเอกสารที่ค้นหา</p>
             <p class="text-gray-400 text-sm mt-2">ลองค้นหาด้วยคำอื่น หรือเลือกดูทั้งหมด</p>
+            <button onclick="clearAll()" class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                ดูเอกสารทั้งหมด
+            </button>
         </div>
     </div>
 
     <!-- Footer -->
-    <div class="bg-gray-800 text-white p-4 mt-8">
-        <div class="max-w-6xl mx-auto text-center">
-            <p class="text-sm">ระบบจัดการเอกสารโรงเรียน © 2568</p>
-            <p class="text-xs text-gray-400 mt-1">ติดต่องานโสตฯ: 02-XXX-XXXX ต่อ 999</p>
+    <footer class="bg-gray-800 text-white p-6 mt-12">
+        <div class="container mx-auto text-center">
+            <p class="mb-2">ระบบจัดการเอกสารโรงเรียน © 2568</p>
+            <div class="flex justify-center gap-6 text-sm">
+                <span><i class="fas fa-phone mr-2"></i>02-XXX-XXXX</span>
+                <span><i class="fas fa-envelope mr-2"></i>school@example.ac.th</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-4">ติดต่องานโสตฯ: ต่อ 999 | อัพเดทล่าสุด: <span id="lastUpdate"></span></p>
         </div>
-    </div>
+    </footer>
 
+    <!-- ============================================= -->
+    <!-- ส่วนที่ 3: JavaScript -->
+    <!-- ============================================= -->
     <script>
-        // Department colors and names
+        // Configuration
         const deptInfo = {
-            hr: { color: 'purple', name: 'บริหารงานบุคคล', icon: 'users' },
-            budget: { color: 'green', name: 'แผนงานและงบประมาณ', icon: 'chart-line' },
-            academic: { color: 'blue', name: 'บริหารงานวิชาการ', icon: 'graduation-cap' },
-            general: { color: 'orange', name: 'บริหารงานทั่วไป', icon: 'cogs' }
+            hr: { color: 'purple', name: 'กลุ่มบริหารงานบุคคล', icon: 'users' },
+            budget: { color: 'green', name: 'กลุ่มแผนงานและงบประมาณ', icon: 'chart-line' },
+            academic: { color: 'blue', name: 'กลุ่มบริหารงานวิชาการ', icon: 'graduation-cap' },
+            general: { color: 'orange', name: 'กลุ่มบริหารงานทั่วไป', icon: 'cogs' }
         };
 
+        // State
         let currentFilter = 'all';
         let searchTerm = '';
+        let typeFilter = '';
+        let viewMode = 'grid';
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            updateDocumentCounts();
             renderDocuments();
+            showImportantDocs();
+            updateLastUpdate();
             
-            // Search functionality
+            // Event Listeners
             document.getElementById('searchInput').addEventListener('input', function(e) {
                 searchTerm = e.target.value.toLowerCase();
                 renderDocuments();
             });
+            
+            document.getElementById('typeFilter').addEventListener('change', function(e) {
+                typeFilter = e.target.value;
+                renderDocuments();
+            });
         });
+
+        // Update document counts
+        function updateDocumentCounts() {
+            const counts = {
+                all: DOCUMENTS.length,
+                hr: DOCUMENTS.filter(d => d.department === 'hr').length,
+                budget: DOCUMENTS.filter(d => d.department === 'budget').length,
+                academic: DOCUMENTS.filter(d => d.department === 'academic').length,
+                general: DOCUMENTS.filter(d => d.department === 'general').length
+            };
+            
+            Object.keys(counts).forEach(key => {
+                const el = document.getElementById(`count-${key}`);
+                if (el) el.textContent = `${counts[key]} เอกสาร`;
+            });
+        }
+
+        // Show important documents
+        function showImportantDocs() {
+            const importantDocs = DOCUMENTS.filter(d => d.important);
+            if (importantDocs.length > 0) {
+                document.getElementById('importantDocs').classList.remove('hidden');
+                document.getElementById('importantList').innerHTML = importantDocs.map(doc => `
+                    <div class="flex items-center justify-between bg-white p-2 rounded">
+                        <span class="text-sm">⭐ ${doc.title}</span>
+                        <button onclick="viewDocument('${doc.department}')" class="text-xs px-2 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700">
+                            ดู
+                        </button>
+                    </div>
+                `).join('');
+            }
+        }
 
         // Filter by department
         function filterDepartment(dept) {
             currentFilter = dept;
+            // Update button styles
+            document.querySelectorAll('.dept-btn').forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-white', 'ring-opacity-50');
+            });
+            document.getElementById(`btn-${dept}`).classList.add('ring-4', 'ring-white', 'ring-opacity-50');
             renderDocuments();
         }
 
-        // Clear filter
-        function clearFilter() {
+        // Clear all filters
+        function clearAll() {
             currentFilter = 'all';
             searchTerm = '';
+            typeFilter = '';
             document.getElementById('searchInput').value = '';
+            document.getElementById('typeFilter').value = '';
+            filterDepartment('all');
+        }
+
+        // Set view mode
+        function setView(mode) {
+            viewMode = mode;
+            if (mode === 'grid') {
+                document.getElementById('viewGrid').className = 'px-3 py-1 bg-blue-600 text-white rounded';
+                document.getElementById('viewList').className = 'px-3 py-1 bg-gray-300 text-gray-600 rounded';
+                document.getElementById('documentsContainer').className = 'grid md:grid-cols-2 lg:grid-cols-3 gap-4';
+            } else {
+                document.getElementById('viewGrid').className = 'px-3 py-1 bg-gray-300 text-gray-600 rounded';
+                document.getElementById('viewList').className = 'px-3 py-1 bg-blue-600 text-white rounded';
+                document.getElementById('documentsContainer').className = 'space-y-3';
+            }
             renderDocuments();
         }
 
         // Render documents
         function renderDocuments() {
-            const container = document.getElementById('documentsList');
+            const container = document.getElementById('documentsContainer');
             const noResults = document.getElementById('noResults');
             
             // Filter documents
@@ -188,10 +339,22 @@
                 );
             }
             
+            // Filter by type
+            if (typeFilter) {
+                filteredDocs = filteredDocs.filter(doc => doc.type === typeFilter);
+            }
+            
             // Update count
             document.getElementById('docCount').textContent = filteredDocs.length;
             
-            // Show/hide no results message
+            // Update filter status
+            let statusText = '';
+            if (currentFilter !== 'all') statusText += `ฝ่าย: ${deptInfo[currentFilter].name} `;
+            if (typeFilter) statusText += `ประเภท: ${typeFilter} `;
+            if (searchTerm) statusText += `ค้นหา: "${searchTerm}"`;
+            document.getElementById('filterStatus').textContent = statusText;
+            
+            // Show/hide no results
             if (filteredDocs.length === 0) {
                 container.innerHTML = '';
                 noResults.classList.remove('hidden');
@@ -200,54 +363,114 @@
                 noResults.classList.add('hidden');
             }
             
-            // Render documents
-            container.innerHTML = filteredDocs.map(doc => {
-                const dept = deptInfo[doc.department];
-                return `
-                    <div class="bg-white rounded-lg shadow hover:shadow-lg transition-all">
-                        <div class="p-4 flex items-center justify-between">
-                            <div class="flex items-center flex-1">
-                                <div class="bg-${dept.color}-100 text-${dept.color}-600 p-3 rounded-lg mr-4">
-                                    <i class="fas fa-${dept.icon} text-2xl"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="font-semibold text-gray-800 text-lg">${doc.title}</h3>
-                                    <div class="flex items-center gap-3 text-sm text-gray-600 mt-1">
-                                        <span><i class="fas fa-folder mr-1"></i>${dept.name}</span>
-                                        <span><i class="fas fa-tag mr-1"></i>${doc.type}</span>
-                                        <span><i class="fas fa-calendar mr-1"></i>${doc.date}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex gap-2">
-                                <button onclick="viewDocument('${doc.department}')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                                    <i class="fas fa-eye mr-2"></i>ดู
-                                </button>
-                                <button onclick="downloadDocument('${doc.department}')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-                                    <i class="fas fa-download mr-2"></i>โหลด
-                                </button>
+            // Render based on view mode
+            if (viewMode === 'grid') {
+                container.innerHTML = filteredDocs.map(doc => renderCard(doc)).join('');
+            } else {
+                container.innerHTML = filteredDocs.map(doc => renderListItem(doc)).join('');
+            }
+        }
+
+        // Render card view
+        function renderCard(doc) {
+            const dept = deptInfo[doc.department];
+            return `
+                <div class="doc-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-${dept.color}-500 to-${dept.color}-600 p-4 text-white">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs bg-white/20 px-2 py-1 rounded">${doc.type}</span>
+                            ${doc.important ? '<span class="text-yellow-300">⭐</span>' : ''}
+                        </div>
+                        <i class="fas fa-${dept.icon} text-3xl mb-3 opacity-50"></i>
+                        <h3 class="font-semibold text-lg leading-tight">${doc.title}</h3>
+                    </div>
+                    <div class="p-4">
+                        <div class="text-sm text-gray-600 mb-3">
+                            <p><i class="fas fa-folder mr-2"></i>${dept.name}</p>
+                            <p><i class="fas fa-calendar mr-2"></i>${doc.date}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="viewDocument('${doc.department}')" class="flex-1 px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                                <i class="fas fa-eye mr-1"></i>ดู
+                            </button>
+                            <button onclick="downloadDocument('${doc.department}')" class="flex-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                                <i class="fas fa-download mr-1"></i>โหลด
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render list view
+        function renderListItem(doc) {
+            const dept = deptInfo[doc.department];
+            return `
+                <div class="bg-white rounded-lg shadow p-4 flex items-center justify-between">
+                    <div class="flex items-center flex-1">
+                        <div class="bg-${dept.color}-100 text-${dept.color}-600 p-3 rounded-lg mr-4">
+                            <i class="fas fa-${dept.icon} text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-800">
+                                ${doc.title}
+                                ${doc.important ? '<span class="text-yellow-500 ml-2">⭐</span>' : ''}
+                            </h3>
+                            <div class="flex items-center gap-3 text-sm text-gray-600">
+                                <span><i class="fas fa-folder mr-1"></i>${dept.name}</span>
+                                <span><i class="fas fa-tag mr-1"></i>${doc.type}</span>
+                                <span><i class="fas fa-calendar mr-1"></i>${doc.date}</span>
                             </div>
                         </div>
                     </div>
-                `;
-            }).join('');
+                    <div class="flex gap-2">
+                        <button onclick="viewDocument('${doc.department}')" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                            <i class="fas fa-eye mr-1"></i>ดู
+                        </button>
+                        <button onclick="downloadDocument('${doc.department}')" class="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                            <i class="fas fa-download mr-1"></i>โหลด
+                        </button>
+                    </div>
+                </div>
+            `;
         }
 
-        // View document (open MyCloud link)
+        // View document
         function viewDocument(department) {
-            window.open(CLOUD_LINKS[department], '_blank');
+            const link = CLOUD_LINKS[department];
+            if (link) {
+                window.open(link, '_blank');
+            } else {
+                alert('ไม่พบลิงก์เอกสาร กรุณาติดต่องานโสตฯ');
+            }
         }
 
-        // Download document (same as view for now)
+        // Download document
         function downloadDocument(department) {
-            alert('กรุณาคลิก "ดู" แล้วดาวน์โหลดจาก Cloud Storage');
-            window.open(CLOUD_LINKS[department], '_blank');
+            const link = CLOUD_LINKS[department];
+            if (link) {
+                alert('เปิดหน้า Cloud Storage แล้ว\nกรุณาเลือกไฟล์ที่ต้องการและคลิกดาวน์โหลด');
+                window.open(link, '_blank');
+            } else {
+                alert('ไม่พบลิงก์เอกสาร กรุณาติดต่องานโสตฯ');
+            }
+        }
+
+        // Update last update date
+        function updateLastUpdate() {
+            const now = new Date();
+            const thai_months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+            const date = `${now.getDate()} ${thai_months[now.getMonth()]} ${now.getFullYear() + 543}`;
+            document.getElementById('lastUpdate').textContent = date;
         }
     </script>
 
-    <!-- Hidden styles for Tailwind colors -->
+    <!-- Tailwind Color Classes (Don't remove) -->
     <div class="hidden">
-        <div class="bg-purple-100 text-purple-600 bg-green-100 text-green-600 bg-blue-100 text-blue-600 bg-orange-100 text-orange-600"></div>
+        <div class="from-purple-500 to-purple-600 bg-purple-100 text-purple-600"></div>
+        <div class="from-green-500 to-green-600 bg-green-100 text-green-600"></div>
+        <div class="from-blue-500 to-blue-600 bg-blue-100 text-blue-600"></div>
+        <div class="from-orange-500 to-orange-600 bg-orange-100 text-orange-600"></div>
     </div>
 
 </body>
