@@ -19,7 +19,7 @@
     #     - บันทึกเป็น "logo.png" ในโฟลเดอร์เดียวกับไฟล์นี้
     #  
     #  2. แก้ไขลิงก์ MyCloud:
-    #     - ดูบรรทัด 178-183 (ส่วน CLOUD_LINKS)
+    #     - ดูบรรทัด 195-270 (ส่วน CLOUD_LINKS)
     #     - เปลี่ยนลิงก์แต่ละฝ่ายตามที่ได้รับ
     #  
     #  3. ไฟล์ที่ต้องมี:
@@ -28,6 +28,7 @@
     #  
     ############################################################
     -->
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
         
@@ -196,12 +197,53 @@
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(135deg, #5569d8 0%, #643a85 100%);
         }
+        
+        /* News Ticker Animation */
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .news-ticker {
+            animation: ticker 30s linear infinite;
+        }
+        
+        .news-ticker:hover {
+            animation-play-state: paused;
+        }
+        
+        /* Quick Link Hover */
+        .quick-link {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .quick-link:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+        }
+        
+        /* Download Item Hover */
+        .download-item {
+            transition: all 0.3s ease;
+        }
+        
+        .download-item:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateX(10px);
+        }
+        
+        .download-item:hover i {
+            color: white !important;
+        }
     </style>
 </head>
 <body>
 
     <!-- ========================================= -->
-    <!-- ส่วนตั้งค่า: งานโสตฯ แก้ลิงก์ได้ที่นี่ -->
+    <!-- ส่วนตั้งค่า: งานโสตฯ แก้ไขได้ที่นี่ -->
     <!-- ========================================= -->
     <script>
         // แก้ไขลิงก์ MyCloud ของแต่ละฝ่ายที่นี่
@@ -220,8 +262,73 @@
             fax: '0-5500-6290 ต่อ 413',
             email: 'plpanyaschool@gmail.com',
             facebook: 'https://www.facebook.com/PhitsanulokPanyaSchool',
-            // งานโสตฯ: เปลี่ยน URL โลโก้ที่นี่ (ใส่ URL ของไฟล์โลโก้จริง)
-            logo: 'logo.png'  // แก้เป็น path ของไฟล์โลโก้จริง เช่น 'images/school-logo.png'
+            // งานโสตฯ: วิธีใส่โลโก้
+            // 1. ดาวน์โหลดโลโก้จาก: https://home.mycloud.com/action/share/34c5eaaa-c4ba-4c41-9f5f-f8c70a931fce
+            // 2. บันทึกเป็น 'logo.png' ในโฟลเดอร์เดียวกับไฟล์ HTML นี้
+            // 3. หรือใช้ Direct Link จาก Image Hosting (imgur, imgbb, Google Drive)
+            logo: 'logo.png'  // แก้เป็น path ของไฟล์โลโก้จริง
+        };
+        
+        // ข่าวด่วน (News Ticker) - แก้ไขข้อความข่าวที่นี่
+        const NEWS_TICKER = [
+            '📢 ประกาศโรงเรียนพิษณุโลกปัญญานุกุล ปีการศึกษา 2568',
+           // '📅 วันหยุดชดเชย 16-17 มกราคม 2568',
+           // '🎓 แสดงความยินดีกับนักเรียนที่ได้รับรางวัลการแข่งขันวิชาการ',
+           // '📚 เปิดระบบลงทะเบียนเรียนออนไลน์แล้ววันนี้',
+            //'🏆 โรงเรียนได้รับรางวัลสถานศึกษาดีเด่น ประจำปี 2567'
+        ];
+        
+        // ประกาศสำคัญ - แก้ไขได้ที่นี่
+        const ANNOUNCEMENTS = [
+            {
+                type: 'info', // info, calendar, trophy, alert
+                title: 'รับสมัครนักเรียนใหม่ ปี 2568',
+                detail: 'เปิดรับสมัครนักเรียนระดับชั้น ม.1 และ ม.4 ตั้งแต่วันที่ 1-28 กุมภาพันธ์ 2568',
+                link: '#',
+                color: 'blue'
+            },
+            {
+                type: 'calendar',
+                title: 'ปฏิทินการศึกษา 2568',
+                detail: 'ดาวน์โหลดปฏิทินการศึกษา ภาคเรียนที่ 2/2567 พร้อมวันหยุดนักขัตฤกษ์',
+                link: '#',
+                color: 'green'
+            },
+            {
+                type: 'trophy',
+                title: 'ผลการแข่งขันวิชาการ',
+                detail: 'แสดงความยินดี! นักเรียนได้รางวัลชนะเลิศการแข่งขันโครงงานวิทยาศาสตร์',
+                link: '#',
+                color: 'yellow'
+            }
+        ];
+        
+        // Quick Links - แก้ไขลิงก์ภายนอกได้ที่นี่
+        const QUICK_LINKS = {
+            obec: 'https://www.obec.go.th/',          // สพฐ.
+            sesao: 'https://www.sesao.go.th/',        // สพม.
+            sgs: 'https://sgs.bopp-obec.info/',       // SGS
+            schoolmis: 'https://schoolmis.go.th/',    // SchoolMIS
+            dmc: 'https://www.dmc.tv/',               // DMC
+            moe: 'https://www.moe.go.th/'             // กระทรวงศึกษา
+        };
+        
+        // Download Files - แก้ไขลิงก์ไฟล์ดาวน์โหลดได้ที่นี่
+        const DOWNLOAD_FILES = {
+            // แบบฟอร์มทั่วไป
+            leaveForm: '#',           // ใบลาป่วย/ลากิจ
+            meetingRoom: '#',         // แบบขอใช้ห้องประชุม
+            schoolVan: '#',           // แบบขอใช้รถโรงเรียน
+            
+            // เอกสารนักเรียน
+            studentLeave: '#',        // ใบลาหยุดเรียน
+            documentRequest: '#',     // คำร้องขอเอกสาร
+            scholarshipForm: '#',     // แบบฟอร์มขอทุน
+            
+            // คู่มือ/ระเบียบ
+            studentManual: '#',       // คู่มือนักเรียน
+            parentManual: '#',        // คู่มือผู้ปกครอง
+            schoolRules: '#'          // ระเบียบโรงเรียน
         };
     </script>
 
@@ -241,9 +348,21 @@
                     <div class="inline-block mb-4 float-animation">
                         <div class="bg-white rounded-2xl p-4 shadow-lg">
                             <!-- 
-                            งานโสตฯ: ใส่ไฟล์โลโก้จริงที่นี่ 
-                            1. บันทึกไฟล์โลโก้ (logo.png หรือ logo.jpg) ไว้ในโฟลเดอร์เดียวกับไฟล์ HTML นี้
-                            2. เปลี่ยน src="logo.png" เป็นชื่อไฟล์โลโก้ของท่าน
+                            ==========================================
+                            งานโสตฯ: วิธีใส่โลโก้โรงเรียน
+                            ==========================================
+                            1. ดาวน์โหลดโลโก้จาก MyCloud:
+                               https://home.mycloud.com/action/share/34c5eaaa-c4ba-4c41-9f5f-f8c70a931fce
+                            
+                            2. บันทึกไฟล์โลโก้เป็นชื่อ "logo.png" หรือ "logo.jpg"
+                               ในโฟลเดอร์เดียวกับไฟล์ HTML นี้
+                            
+                            3. ถ้าใช้ชื่อไฟล์อื่น ให้แก้ src="logo.png" ด้านล่าง
+                               เป็นชื่อไฟล์ที่ถูกต้อง
+                            
+                            หมายเหตุ: ลิงก์ MyCloud ไม่สามารถใช้เป็น src โดยตรงได้
+                            ต้องดาวน์โหลดไฟล์มาก่อนเท่านั้น
+                            ==========================================
                             -->
                             <img src="logo.png" 
                                  alt="โลโก้โรงเรียนพิษณุโลกปัญญานุกูล" 
@@ -299,8 +418,105 @@
         </div>
     </header>
 
+    <!-- News Ticker / ประกาศข่าวสาร -->
+    <div class="relative z-10 glass shadow-lg mt-4 mx-4">
+        <div class="flex items-center">
+            <div class="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 font-bold flex items-center">
+                <i class="fas fa-bullhorn mr-2 animate-pulse"></i>
+                ข่าวด่วน
+            </div>
+            <div class="flex-1 overflow-hidden py-2 px-4">
+                <div class="news-ticker whitespace-nowrap">
+                    <span class="text-gray-700 font-medium">
+                        📢 ประกาศรับสมัครนักเรียนใหม่ ปีการศึกษา 2568 | 
+                        📅 วันหยุดชดเชย 16-17 มกราคม 2568 | 
+                        🎓 แสดงความยินดีกับนักเรียนที่ได้รับรางวัลการแข่งขันวิชาการ | 
+                        📚 เปิดระบบลงทะเบียนเรียนออนไลน์แล้ววันนี้ | 
+                        🏆 โรงเรียนได้รับรางวัลสถานศึกษาดีเด่น ประจำปี 2567
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content -->
     <main class="relative z-10 max-w-6xl mx-auto p-6 mt-8">
+        
+        <!-- Important Announcements Section -->
+        <div class="glass rounded-2xl p-6 mb-8 shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-semibold text-gray-800">
+                    <i class="fas fa-megaphone text-red-500 mr-2"></i>
+                    ประกาศสำคัญ
+                </h2>
+                <span class="text-sm text-gray-500">
+                    อัปเดตล่าสุด: <span id="update-date">10 มกราคม 2568</span>
+                </span>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- ประกาศ 1 -->
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl border-l-4 border-blue-500">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center">
+                                <i class="fas fa-info text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3">
+                            <h4 class="font-semibold text-gray-800 mb-1">รับสมัครนักเรียนใหม่ ปี 2568</h4>
+                            <p class="text-sm text-gray-600 mb-2">เปิดรับสมัครนักเรียนระดับชั้น ม.1 และ ม.4 ตั้งแต่วันที่ 1-28 กุมภาพันธ์ 2568</p>
+                            <a href="#" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                                อ่านเพิ่มเติม →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ประกาศ 2 -->
+                <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-xl border-l-4 border-green-500">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center">
+                                <i class="fas fa-calendar text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3">
+                            <h4 class="font-semibold text-gray-800 mb-1">ปฏิทินการศึกษา 2568</h4>
+                            <p class="text-sm text-gray-600 mb-2">ดาวน์โหลดปฏิทินการศึกษา ภาคเรียนที่ 2/2567 พร้อมวันหยุดนักขัตฤกษ์</p>
+                            <a href="#" class="text-sm text-green-600 hover:text-green-800 font-medium">
+                                ดาวน์โหลด PDF →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ประกาศ 3 -->
+                <div class="bg-gradient-to-br from-yellow-50 to-amber-50 p-4 rounded-xl border-l-4 border-yellow-500">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-yellow-500 text-white rounded-full flex items-center justify-center">
+                                <i class="fas fa-trophy text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3">
+                            <h4 class="font-semibold text-gray-800 mb-1">ผลการแข่งขันวิชาการ</h4>
+                            <p class="text-sm text-gray-600 mb-2">แสดงความยินดี! นักเรียนได้รางวัลชนะเลิศการแข่งขันโครงงานวิทยาศาสตร์</p>
+                            <a href="#" class="text-sm text-yellow-600 hover:text-yellow-800 font-medium">
+                                ดูรายละเอียด →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- View All Button -->
+            <div class="text-center mt-4">
+                <button class="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full hover:shadow-lg transition text-sm font-medium">
+                    <i class="fas fa-list mr-2"></i>ดูประกาศทั้งหมด
+                </button>
+            </div>
+        </div>
         
         <!-- Quick Access Section -->
         <div class="glass rounded-2xl p-6 mb-8 shadow-xl">
@@ -510,6 +726,179 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+
+        <!-- Quick Links Section -->
+        <div class="glass rounded-2xl p-6 mb-8 shadow-xl">
+            <div class="flex items-center mb-4">
+                <div class="p-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl text-white mr-4">
+                    <i class="fas fa-link text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800">Quick Links - ลิงก์ด่วน</h3>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <!-- สพฐ. -->
+                <a href="https://www.obec.go.th/" target="_blank" class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
+                    <div class="text-3xl mb-2 text-blue-600">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <p class="text-sm font-medium text-gray-700">สพฐ.</p>
+                </a>
+                
+                <!-- สพม. -->
+                <a href="https://www.sesao.go.th/" target="_blank" class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
+                    <div class="text-3xl mb-2 text-green-600">
+                        <i class="fas fa-school"></i>
+                    </div>
+                    <p class="text-sm font-medium text-gray-700">สพม.</p>
+                </a>
+                
+                <!-- SGS -->
+                <a href="https://sgs.bopp-obec.info/" target="_blank" class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
+                    <div class="text-3xl mb-2 text-purple-600">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <p class="text-sm font-medium text-gray-700">SGS</p>
+                </a>
+                
+                <!-- SchoolMIS -->
+                <a href="https://schoolmis.go.th/" target="_blank" class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
+                    <div class="text-3xl mb-2 text-orange-600">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <p class="text-sm font-medium text-gray-700">SchoolMIS</p>
+                </a>
+                
+                <!-- DMC -->
+                <a href="https://www.dmc.tv/" target="_blank" class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
+                    <div class="text-3xl mb-2 text-red-600">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <p class="text-sm font-medium text-gray-700">DMC</p>
+                </a>
+                
+                <!-- MOE -->
+                <a href="https://www.moe.go.th/" target="_blank" class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
+                    <div class="text-3xl mb-2 text-teal-600">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <p class="text-sm font-medium text-gray-700">กระทรวงศึกษา</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- Download Center Section -->
+        <div class="glass rounded-2xl p-6 mb-8 shadow-xl">
+            <div class="flex items-center mb-4">
+                <div class="p-3 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl text-white mr-4">
+                    <i class="fas fa-download text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800">Download Center - ศูนย์ดาวน์โหลด</h3>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- แบบฟอร์มทั่วไป -->
+                <div class="bg-white rounded-xl p-4">
+                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-folder text-blue-500 mr-2"></i>
+                        แบบฟอร์มทั่วไป
+                    </h4>
+                    <div class="space-y-2">
+                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
+                            <span class="text-sm flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                ใบลาป่วย/ลากิจ
+                            </span>
+                            <i class="fas fa-arrow-down text-gray-400"></i>
+                        </a>
+                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
+                            <span class="text-sm flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                แบบขอใช้ห้องประชุม
+                            </span>
+                            <i class="fas fa-arrow-down text-gray-400"></i>
+                        </a>
+                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
+                            <span class="text-sm flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                แบบขอใช้รถโรงเรียน
+                            </span>
+                            <i class="fas fa-arrow-down text-gray-400"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- เอกสารนักเรียน -->
+                <div class="bg-white rounded-xl p-4">
+                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-folder text-green-500 mr-2"></i>
+                        เอกสารนักเรียน
+                    </h4>
+                    <div class="space-y-2">
+                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
+                            <span class="text-sm flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                ใบลาหยุดเรียน
+                            </span>
+                            <i class="fas fa-arrow-down text-gray-400"></i>
+                        </a>
+                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
+                            <span class="text-sm flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                คำร้องขอเอกสาร
+                            </span>
+                            <i class="fas fa-arrow-down text-gray-400"></i>
+                        </a>
+                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
+                            <span class="text-sm flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                แบบฟอร์มขอทุน
+                            </span>
+                            <i class="fas fa-arrow-down text-gray-400"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- คู่มือ/ระเบียบ -->
+                <div class="bg-white rounded-xl p-4">
+                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-folder text-purple-500 mr-2"></i>
+                        คู่มือ/ระเบียบ
+                    </h4>
+                    <div class="space-y-2">
+                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
+                            <span class="text-sm flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                คู่มือนักเรียน
+                            </span>
+                            <i class="fas fa-arrow-down text-gray-400"></i>
+                        </a>
+                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
+                            <span class="text-sm flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                คู่มือผู้ปกครอง
+                            </span>
+                            <i class="fas fa-arrow-down text-gray-400"></i>
+                        </a>
+                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
+                            <span class="text-sm flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                ระเบียบโรงเรียน
+                            </span>
+                            <i class="fas fa-arrow-down text-gray-400"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Note -->
+            <div class="mt-4 p-3 bg-yellow-50 rounded-lg">
+                <p class="text-sm text-yellow-800">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <strong>หมายเหตุ:</strong> ไฟล์ทั้งหมดอยู่ในรูปแบบ PDF หากไม่สามารถเปิดได้ กรุณาติดต่องานโสตฯ
+                </p>
             </div>
         </div>
 
@@ -1078,6 +1467,37 @@
             copyrightElements.forEach(el => {
                 el.innerHTML = el.innerHTML.replace('2024', year);
             });
+            
+            // Update announcement date to current date
+            const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 
+                          'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+            const today = new Date();
+            const thaiYear = today.getFullYear() + 543;
+            const dateStr = `${today.getDate()} ${months[today.getMonth()]} ${thaiYear}`;
+            const updateDateEl = document.getElementById('update-date');
+            if(updateDateEl) {
+                updateDateEl.textContent = dateStr;
+            }
+            
+            // Handle download links
+            document.querySelectorAll('.download-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // แสดงข้อความแจ้งเตือน
+                    alert('กำลังดาวน์โหลดไฟล์...\n\nหมายเหตุ: ในระบบจริง ให้ใส่ลิงก์ไฟล์ PDF ที่ href ของแต่ละรายการ');
+                });
+            });
+            
+            // News ticker pause on hover
+            const ticker = document.querySelector('.news-ticker');
+            if(ticker) {
+                ticker.addEventListener('mouseenter', () => {
+                    ticker.style.animationPlayState = 'paused';
+                });
+                ticker.addEventListener('mouseleave', () => {
+                    ticker.style.animationPlayState = 'running';
+                });
+            }
         });
         
         // Smooth scroll effect
