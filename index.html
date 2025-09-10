@@ -19,7 +19,7 @@
     #     - บันทึกเป็น "logo.png" ในโฟลเดอร์เดียวกับไฟล์นี้
     #  
     #  2. แก้ไขลิงก์ MyCloud:
-    #     - ดูบรรทัด 195-270 (ส่วน CLOUD_LINKS)
+    #     - ดูบรรทัด JavaScript variables
     #     - เปลี่ยนลิงก์แต่ละฝ่ายตามที่ได้รับ
     #  
     #  3. ไฟล์ที่ต้องมี:
@@ -238,6 +238,22 @@
         .download-item:hover i {
             color: white !important;
         }
+
+        /* Announcement Animation */
+        .announcement-item {
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from { 
+                transform: translateY(30px); 
+                opacity: 0; 
+            }
+            to { 
+                transform: translateY(0); 
+                opacity: 1; 
+            }
+        }
     </style>
 </head>
 <body>
@@ -269,62 +285,89 @@
             logo: 'logo.png'  // แก้เป็น path ของไฟล์โลโก้จริง
         };
         
-const NEWS_TICKER = [
-    '📸 งานโสตฯ อัปเดตภาพกิจกรรม...',
-    // ← นี่คือข่าวที่วิ่งในแถบแดง
-];
+        // ข่าวแถบวิ่ง - แก้ไขได้ที่นี่
+        const NEWS_TICKER = [
+            '📸 งานโสตฯ อัปเดตภาพกิจกรรม...',
+            '📢 ประกาศรับสมัครนักเรียนใหม่ ปีการศึกษา 2568',
+            '📅 วันหยุดชดเชย 16-17 มกราคม 2568',
+            '🎓 แสดงความยินดีกับนักเรียนที่ได้รับรางวัลการแข่งขันวิชาการ',
+            '📚 เปิดระบบลงทะเบียนเรียนออนไลน์แล้ววันนี้',
+            '🏆 โรงเรียนได้รับรางวัลสถานศึกษาดีเด่น ประจำปี 2567'
+        ];
         
-        // ประกาศสำคัญ - แก้ไขได้ที่นี่
+        // ประกาศสำคัญ - แก้ไขได้ที่นี่ (ตัวนี้จะทำงานแล้ว!)
         const ANNOUNCEMENTS = [
             {
                 type: 'info', // info, calendar, trophy, alert
                 title: 'รับสมัครนักเรียนใหม่ ปี 2568',
                 detail: 'เปิดรับสมัครนักเรียนระดับชั้น ม.1 และ ม.4 ตั้งแต่วันที่ 1-28 กุมภาพันธ์ 2568',
                 link: '#',
-                color: 'blue'
+                color: 'blue',
+                icon: 'info'
             },
             {
                 type: 'calendar',
                 title: 'ปฏิทินการศึกษา 2568',
                 detail: 'ดาวน์โหลดปฏิทินการศึกษา ภาคเรียนที่ 2/2567 พร้อมวันหยุดนักขัตฤกษ์',
                 link: '#',
-                color: 'green'
+                color: 'green',
+                icon: 'calendar'
             },
             {
                 type: 'trophy',
                 title: 'ผลการแข่งขันวิชาการ',
                 detail: 'แสดงความยินดี! นักเรียนได้รางวัลชนะเลิศการแข่งขันโครงงานวิทยาศาสตร์',
                 link: '#',
-                color: 'yellow'
+                color: 'yellow',
+                icon: 'trophy'
             }
         ];
         
         // Quick Links - แก้ไขลิงก์ภายนอกได้ที่นี่
         const QUICK_LINKS = {
-            obec: 'https://www.obec.go.th/',          // สพฐ.
-            sesao: 'https://www.sesao.go.th/',        // สพม.
-            sgs: 'https://sgs.bopp-obec.info/',       // SGS
-            schoolmis: 'https://schoolmis.go.th/',    // SchoolMIS
-            dmc: 'https://www.dmc.tv/',               // DMC
-            moe: 'https://www.moe.go.th/'             // กระทรวงศึกษา
+            obec: { name: 'สพฐ.', url: 'https://www.obec.go.th/', icon: 'university', color: 'blue' },
+            sesao: { name: 'สพม.', url: 'https://www.sesao.go.th/', icon: 'school', color: 'green' },
+            sgs: { name: 'SGS', url: 'https://sgs.bopp-obec.info/', icon: 'chart-line', color: 'purple' },
+            schoolmis: { name: 'SchoolMIS', url: 'https://schoolmis.go.th/', icon: 'database', color: 'orange' },
+            dmc: { name: 'DMC', url: 'https://www.dmc.tv/', icon: 'tv', color: 'red' },
+            moe: { name: 'กระทรวงศึกษา', url: 'https://www.moe.go.th/', icon: 'graduation-cap', color: 'teal' }
         };
         
         // Download Files - แก้ไขลิงก์ไฟล์ดาวน์โหลดได้ที่นี่
         const DOWNLOAD_FILES = {
             // แบบฟอร์มทั่วไป
-            leaveForm: '#',           // ใบลาป่วย/ลากิจ
-            meetingRoom: '#',         // แบบขอใช้ห้องประชุม
-            schoolVan: '#',           // แบบขอใช้รถโรงเรียน
-            
+            forms: {
+                title: 'แบบฟอร์มทั่วไป',
+                icon: 'folder',
+                color: 'blue',
+                items: [
+                    { name: 'ใบลาป่วย/ลากิจ', link: '#', icon: 'file-pdf' },
+                    { name: 'แบบขอใช้ห้องประชุม', link: '#', icon: 'file-pdf' },
+                    { name: 'แบบขอใช้รถโรงเรียน', link: '#', icon: 'file-pdf' }
+                ]
+            },
             // เอกสารนักเรียน
-            studentLeave: '#',        // ใบลาหยุดเรียน
-            documentRequest: '#',     // คำร้องขอเอกสาร
-            scholarshipForm: '#',     // แบบฟอร์มขอทุน
-            
+            student: {
+                title: 'เอกสารนักเรียน',
+                icon: 'folder',
+                color: 'green',
+                items: [
+                    { name: 'ใบลาหยุดเรียน', link: '#', icon: 'file-pdf' },
+                    { name: 'คำร้องขอเอกสาร', link: '#', icon: 'file-pdf' },
+                    { name: 'แบบฟอร์มขอทุน', link: '#', icon: 'file-pdf' }
+                ]
+            },
             // คู่มือ/ระเบียบ
-            studentManual: '#',       // คู่มือนักเรียน
-            parentManual: '#',        // คู่มือผู้ปกครอง
-            schoolRules: '#'          // ระเบียบโรงเรียน
+            manual: {
+                title: 'คู่มือ/ระเบียบ',
+                icon: 'folder',
+                color: 'purple',
+                items: [
+                    { name: 'คู่มือนักเรียน', link: '#', icon: 'file-pdf' },
+                    { name: 'คู่มือผู้ปกครอง', link: '#', icon: 'file-pdf' },
+                    { name: 'ระเบียบโรงเรียน', link: '#', icon: 'file-pdf' }
+                ]
+            }
         };
     </script>
 
@@ -343,24 +386,7 @@ const NEWS_TICKER = [
                     <!-- School Logo -->
                     <div class="inline-block mb-4 float-animation">
                         <div class="bg-white rounded-2xl p-4 shadow-lg">
-                            <!-- 
-                            ==========================================
-                            งานโสตฯ: วิธีใส่โลโก้โรงเรียน
-                            ==========================================
-                            1. ดาวน์โหลดโลโก้จาก MyCloud:
-                               https://home.mycloud.com/action/share/34c5eaaa-c4ba-4c41-9f5f-f8c70a931fce
-                            
-                            2. บันทึกไฟล์โลโก้เป็นชื่อ "logo.png" หรือ "logo.jpg"
-                               ในโฟลเดอร์เดียวกับไฟล์ HTML นี้
-                            
-                            3. ถ้าใช้ชื่อไฟล์อื่น ให้แก้ src="logo.png" ด้านล่าง
-                               เป็นชื่อไฟล์ที่ถูกต้อง
-                            
-                            หมายเหตุ: ลิงก์ MyCloud ไม่สามารถใช้เป็น src โดยตรงได้
-                            ต้องดาวน์โหลดไฟล์มาก่อนเท่านั้น
-                            ==========================================
-                            -->
-                            <img src="logo.png" 
+                            <img id="school-logo" src="logo.png" 
                                  alt="โลโก้โรงเรียนพิษณุโลกปัญญานุกูล" 
                                  class="h-32 w-auto mx-auto"
                                  onerror="this.style.display='none'; document.getElementById('backup-logo').style.display='block';">
@@ -376,7 +402,7 @@ const NEWS_TICKER = [
                             </div>
                         </div>
                     </div>
-                    <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                    <h1 id="school-name" class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
                         โรงเรียนพิษณุโลกปัญญานุกูล
                     </h1>
                     <p class="text-gray-600 text-lg">ระบบจัดการเอกสารออนไลน์</p>
@@ -422,14 +448,8 @@ const NEWS_TICKER = [
                 ข่าวด่วน
             </div>
             <div class="flex-1 overflow-hidden py-2 px-4">
-                <div class="news-ticker whitespace-nowrap">
-                    <span class="text-gray-700 font-medium">
-                        📢 ประกาศรับสมัครนักเรียนใหม่ ปีการศึกษา 2568 | 
-                        📅 วันหยุดชดเชย 16-17 มกราคม 2568 | 
-                        🎓 แสดงความยินดีกับนักเรียนที่ได้รับรางวัลการแข่งขันวิชาการ | 
-                        📚 เปิดระบบลงทะเบียนเรียนออนไลน์แล้ววันนี้ | 
-                        🏆 โรงเรียนได้รับรางวัลสถานศึกษาดีเด่น ประจำปี 2567
-                    </span>
+                <div id="news-ticker" class="news-ticker whitespace-nowrap">
+                    <!-- ข้อมูลข่าวจะถูกใส่ที่นี่ด้วย JavaScript -->
                 </div>
             </div>
         </div>
@@ -450,60 +470,9 @@ const NEWS_TICKER = [
                 </span>
             </div>
             
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- ประกาศ 1 -->
-                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl border-l-4 border-blue-500">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center">
-                                <i class="fas fa-info text-sm"></i>
-                            </div>
-                        </div>
-                        <div class="ml-3">
-                            <h4 class="font-semibold text-gray-800 mb-1">รับสมัครนักเรียนใหม่ ปี 2568</h4>
-                            <p class="text-sm text-gray-600 mb-2">เปิดรับสมัครนักเรียนระดับชั้น ม.1 และ ม.4 ตั้งแต่วันที่ 1-28 กุมภาพันธ์ 2568</p>
-                            <a href="#" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
-                                อ่านเพิ่มเติม →
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ประกาศ 2 -->
-                <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-xl border-l-4 border-green-500">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <div class="w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center">
-                                <i class="fas fa-calendar text-sm"></i>
-                            </div>
-                        </div>
-                        <div class="ml-3">
-                            <h4 class="font-semibold text-gray-800 mb-1">ปฏิทินการศึกษา 2568</h4>
-                            <p class="text-sm text-gray-600 mb-2">ดาวน์โหลดปฏิทินการศึกษา ภาคเรียนที่ 2/2567 พร้อมวันหยุดนักขัตฤกษ์</p>
-                            <a href="#" class="text-sm text-green-600 hover:text-green-800 font-medium">
-                                ดาวน์โหลด PDF →
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ประกาศ 3 -->
-                <div class="bg-gradient-to-br from-yellow-50 to-amber-50 p-4 rounded-xl border-l-4 border-yellow-500">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <div class="w-10 h-10 bg-yellow-500 text-white rounded-full flex items-center justify-center">
-                                <i class="fas fa-trophy text-sm"></i>
-                            </div>
-                        </div>
-                        <div class="ml-3">
-                            <h4 class="font-semibold text-gray-800 mb-1">ผลการแข่งขันวิชาการ</h4>
-                            <p class="text-sm text-gray-600 mb-2">แสดงความยินดี! นักเรียนได้รางวัลชนะเลิศการแข่งขันโครงงานวิทยาศาสตร์</p>
-                            <a href="#" class="text-sm text-yellow-600 hover:text-yellow-800 font-medium">
-                                ดูรายละเอียด →
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            <!-- ประกาศจะถูกใส่ที่นี่ด้วย JavaScript -->
+            <div id="announcements-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dynamic content will be inserted here -->
             </div>
             
             <!-- View All Button -->
@@ -569,7 +538,7 @@ const NEWS_TICKER = [
                                         class="flex-1 bg-purple-50 text-purple-600 text-center py-3 rounded-xl hover:bg-purple-100 transition-all font-medium">
                                     <i class="fas fa-info-circle mr-2"></i>ดูรายละเอียด
                                 </button>
-                                <button onclick="window.open('https://home.mycloud.com/action/share/415a910f-f8af-4f42-a182-01f11a40fd06', '_blank')" 
+                                <button onclick="window.open(CLOUD_LINKS.hr, '_blank')" 
                                         class="flex-1 gradient-hr text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
                                     <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบ
                                 </button>
@@ -617,7 +586,7 @@ const NEWS_TICKER = [
                                         class="flex-1 bg-green-50 text-green-600 text-center py-3 rounded-xl hover:bg-green-100 transition-all font-medium">
                                     <i class="fas fa-info-circle mr-2"></i>ดูรายละเอียด
                                 </button>
-                                <button onclick="window.open('https://home.mycloud.com/action/share/b91896dc-2385-44ad-9a4d-a8beeb9cd717', '_blank')" 
+                                <button onclick="window.open(CLOUD_LINKS.budget, '_blank')" 
                                         class="flex-1 gradient-budget text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
                                     <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบ
                                 </button>
@@ -665,7 +634,7 @@ const NEWS_TICKER = [
                                         class="flex-1 bg-blue-50 text-blue-600 text-center py-3 rounded-xl hover:bg-blue-100 transition-all font-medium">
                                     <i class="fas fa-info-circle mr-2"></i>ดูรายละเอียด
                                 </button>
-                                <button onclick="window.open('https://home.mycloud.com/action/share/69aa0c0e-dd0a-45d1-86e3-83d62d3e3784', '_blank')" 
+                                <button onclick="window.open(CLOUD_LINKS.academic, '_blank')" 
                                         class="flex-1 gradient-academic text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
                                     <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบ
                                 </button>
@@ -713,7 +682,7 @@ const NEWS_TICKER = [
                                         class="flex-1 bg-orange-50 text-orange-600 text-center py-3 rounded-xl hover:bg-orange-100 transition-all font-medium">
                                     <i class="fas fa-info-circle mr-2"></i>ดูรายละเอียด
                                 </button>
-                                <button onclick="window.open('https://home.mycloud.com/action/share/0d00ff49-23da-4c92-aad3-f22428111f9e', '_blank')" 
+                                <button onclick="window.open(CLOUD_LINKS.general, '_blank')" 
                                         class="flex-1 gradient-general text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
                                     <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบ
                                 </button>
@@ -734,54 +703,8 @@ const NEWS_TICKER = [
                 <h3 class="text-xl font-semibold text-gray-800">Quick Links - ลิงก์ด่วน</h3>
             </div>
             
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <!-- สพฐ. -->
-                <a href="https://www.obec.go.th/" target="_blank" class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
-                    <div class="text-3xl mb-2 text-blue-600">
-                        <i class="fas fa-university"></i>
-                    </div>
-                    <p class="text-sm font-medium text-gray-700">สพฐ.</p>
-                </a>
-                
-                <!-- สพม. -->
-                <a href="https://www.sesao.go.th/" target="_blank" class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
-                    <div class="text-3xl mb-2 text-green-600">
-                        <i class="fas fa-school"></i>
-                    </div>
-                    <p class="text-sm font-medium text-gray-700">สพม.</p>
-                </a>
-                
-                <!-- SGS -->
-                <a href="https://sgs.bopp-obec.info/" target="_blank" class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
-                    <div class="text-3xl mb-2 text-purple-600">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <p class="text-sm font-medium text-gray-700">SGS</p>
-                </a>
-                
-                <!-- SchoolMIS -->
-                <a href="https://schoolmis.go.th/" target="_blank" class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
-                    <div class="text-3xl mb-2 text-orange-600">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <p class="text-sm font-medium text-gray-700">SchoolMIS</p>
-                </a>
-                
-                <!-- DMC -->
-                <a href="https://www.dmc.tv/" target="_blank" class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
-                    <div class="text-3xl mb-2 text-red-600">
-                        <i class="fas fa-tv"></i>
-                    </div>
-                    <p class="text-sm font-medium text-gray-700">DMC</p>
-                </a>
-                
-                <!-- MOE -->
-                <a href="https://www.moe.go.th/" target="_blank" class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
-                    <div class="text-3xl mb-2 text-teal-600">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <p class="text-sm font-medium text-gray-700">กระทรวงศึกษา</p>
-                </a>
+            <div id="quick-links-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <!-- Quick links จะถูกใส่ที่นี่ด้วย JavaScript -->
             </div>
         </div>
 
@@ -794,99 +717,8 @@ const NEWS_TICKER = [
                 <h3 class="text-xl font-semibold text-gray-800">Download Center - ศูนย์ดาวน์โหลด</h3>
             </div>
             
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- แบบฟอร์มทั่วไป -->
-                <div class="bg-white rounded-xl p-4">
-                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
-                        <i class="fas fa-folder text-blue-500 mr-2"></i>
-                        แบบฟอร์มทั่วไป
-                    </h4>
-                    <div class="space-y-2">
-                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
-                            <span class="text-sm flex items-center">
-                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
-                                ใบลาป่วย/ลากิจ
-                            </span>
-                            <i class="fas fa-arrow-down text-gray-400"></i>
-                        </a>
-                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
-                            <span class="text-sm flex items-center">
-                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
-                                แบบขอใช้ห้องประชุม
-                            </span>
-                            <i class="fas fa-arrow-down text-gray-400"></i>
-                        </a>
-                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
-                            <span class="text-sm flex items-center">
-                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
-                                แบบขอใช้รถโรงเรียน
-                            </span>
-                            <i class="fas fa-arrow-down text-gray-400"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- เอกสารนักเรียน -->
-                <div class="bg-white rounded-xl p-4">
-                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
-                        <i class="fas fa-folder text-green-500 mr-2"></i>
-                        เอกสารนักเรียน
-                    </h4>
-                    <div class="space-y-2">
-                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
-                            <span class="text-sm flex items-center">
-                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
-                                ใบลาหยุดเรียน
-                            </span>
-                            <i class="fas fa-arrow-down text-gray-400"></i>
-                        </a>
-                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
-                            <span class="text-sm flex items-center">
-                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
-                                คำร้องขอเอกสาร
-                            </span>
-                            <i class="fas fa-arrow-down text-gray-400"></i>
-                        </a>
-                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
-                            <span class="text-sm flex items-center">
-                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
-                                แบบฟอร์มขอทุน
-                            </span>
-                            <i class="fas fa-arrow-down text-gray-400"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- คู่มือ/ระเบียบ -->
-                <div class="bg-white rounded-xl p-4">
-                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
-                        <i class="fas fa-folder text-purple-500 mr-2"></i>
-                        คู่มือ/ระเบียบ
-                    </h4>
-                    <div class="space-y-2">
-                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
-                            <span class="text-sm flex items-center">
-                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
-                                คู่มือนักเรียน
-                            </span>
-                            <i class="fas fa-arrow-down text-gray-400"></i>
-                        </a>
-                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
-                            <span class="text-sm flex items-center">
-                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
-                                คู่มือผู้ปกครอง
-                            </span>
-                            <i class="fas fa-arrow-down text-gray-400"></i>
-                        </a>
-                        <a href="#" class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer">
-                            <span class="text-sm flex items-center">
-                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
-                                ระเบียบโรงเรียน
-                            </span>
-                            <i class="fas fa-arrow-down text-gray-400"></i>
-                        </a>
-                    </div>
-                </div>
+            <div id="download-center" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Download files จะถูกใส่ที่นี่ด้วย JavaScript -->
             </div>
             
             <!-- Note -->
@@ -1005,15 +837,15 @@ const NEWS_TICKER = [
                     <div class="space-y-2 text-sm text-gray-600">
                         <div class="flex items-start">
                             <i class="fas fa-map-pin text-purple-500 mr-2 mt-1"></i>
-                            <span>78 หมู่ 3 ตำบลมะขามสูง อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</span>
+                            <span id="school-address">78 หมู่ 3 ตำบลมะขามสูง อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</span>
                         </div>
                         <div class="flex items-center">
                             <i class="fas fa-phone text-green-500 mr-2"></i>
-                            <span>โทรศัพท์: 0-5500-6290</span>
+                            <span>โทรศัพท์: <span id="school-phone">0-5500-6290</span></span>
                         </div>
                         <div class="flex items-center">
                             <i class="fas fa-fax text-orange-500 mr-2"></i>
-                            <span>โทรสาร: 0-5500-6290 ต่อ 413</span>
+                            <span>โทรสาร: <span id="school-fax">0-5500-6290 ต่อ 413</span></span>
                         </div>
                     </div>
                 </div>
@@ -1024,11 +856,11 @@ const NEWS_TICKER = [
                         <i class="fas fa-globe text-blue-600 mr-2"></i>ช่องทางออนไลน์
                     </h4>
                     <div class="space-y-2 text-sm">
-                        <a href="mailto:plpanyaschool@gmail.com" class="flex items-center text-gray-600 hover:text-blue-600 transition">
+                        <a href="mailto:plpanyaschool@gmail.com" id="school-email" class="flex items-center text-gray-600 hover:text-blue-600 transition">
                             <i class="fas fa-envelope text-red-500 mr-2"></i>
                             <span>plpanyaschool@gmail.com</span>
                         </a>
-                        <a href="https://www.facebook.com/PhitsanulokPanyaSchool" target="_blank" class="flex items-center text-gray-600 hover:text-blue-600 transition">
+                        <a href="https://www.facebook.com/PhitsanulokPanyaSchool" id="school-facebook" target="_blank" class="flex items-center text-gray-600 hover:text-blue-600 transition">
                             <i class="fab fa-facebook text-blue-600 mr-2"></i>
                             <span>Phitsanulok Panya School</span>
                         </a>
@@ -1097,7 +929,7 @@ const NEWS_TICKER = [
                     <div class="w-32 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto mb-3"></div>
                     
                     <!-- Copyright -->
-                    <p class="text-gray-600 mb-2">School Document Portal © 2024</p>
+                    <p class="text-gray-600 mb-2">School Document Portal © <span id="current-year">2024</span></p>
                     <p class="text-sm text-gray-500">
                         <i class="fas fa-tools mr-2"></i>ติดต่องานโสตฯ: 0-5500-6290 ต่อ 999
                     </p>
@@ -1178,7 +1010,7 @@ const NEWS_TICKER = [
                     </div>
                 </div>
                 
-                <button onclick="window.open('https://home.mycloud.com/action/share/415a910f-f8af-4f42-a182-01f11a40fd06', '_blank')" 
+                <button onclick="window.open(CLOUD_LINKS.hr, '_blank')" 
                         class="w-full gradient-hr text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
                     <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบเอกสาร MyCloud
                 </button>
@@ -1257,7 +1089,7 @@ const NEWS_TICKER = [
                     </div>
                 </div>
                 
-                <button onclick="window.open('https://home.mycloud.com/action/share/b91896dc-2385-44ad-9a4d-a8beeb9cd717', '_blank')" 
+                <button onclick="window.open(CLOUD_LINKS.budget, '_blank')" 
                         class="w-full gradient-budget text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
                     <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบเอกสาร MyCloud
                 </button>
@@ -1336,7 +1168,7 @@ const NEWS_TICKER = [
                     </div>
                 </div>
                 
-                <button onclick="window.open('https://home.mycloud.com/action/share/69aa0c0e-dd0a-45d1-86e3-83d62d3e3784', '_blank')" 
+                <button onclick="window.open(CLOUD_LINKS.academic, '_blank')" 
                         class="w-full gradient-academic text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
                     <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบเอกสาร MyCloud
                 </button>
@@ -1424,7 +1256,7 @@ const NEWS_TICKER = [
                     </div>
                 </div>
                 
-                <button onclick="window.open('https://home.mycloud.com/action/share/0d00ff49-23da-4c92-aad3-f22428111f9e', '_blank')" 
+                <button onclick="window.open(CLOUD_LINKS.general, '_blank')" 
                         class="w-full gradient-general text-white text-center py-3 rounded-xl hover:shadow-lg transition-all font-medium">
                     <i class="fas fa-external-link-alt mr-2"></i>เข้าสู่ระบบเอกสาร MyCloud
                 </button>
@@ -1433,6 +1265,140 @@ const NEWS_TICKER = [
     </div>
 
     <script>
+        // ===========================================
+        // ฟังก์ชันสำหรับ Update ข้อมูลแบบ Dynamic
+        // ===========================================
+
+        // Update ข้อมูลโรงเรียน
+        function updateSchoolInfo() {
+            document.getElementById('school-name').textContent = SCHOOL_INFO.name;
+            document.getElementById('school-logo').src = SCHOOL_INFO.logo;
+            document.getElementById('school-address').textContent = SCHOOL_INFO.address;
+            document.getElementById('school-phone').textContent = SCHOOL_INFO.phone;
+            document.getElementById('school-fax').textContent = SCHOOL_INFO.fax;
+            document.getElementById('school-email').href = `mailto:${SCHOOL_INFO.email}`;
+            document.getElementById('school-email').querySelector('span').textContent = SCHOOL_INFO.email;
+            document.getElementById('school-facebook').href = SCHOOL_INFO.facebook;
+        }
+
+        // Update ข่าวแถบวิ่ง
+        function updateNewsTicker() {
+            const ticker = document.getElementById('news-ticker');
+            const newsText = NEWS_TICKER.join(' | ');
+            ticker.innerHTML = `<span class="text-gray-700 font-medium">${newsText}</span>`;
+        }
+
+        // Update ประกาศสำคัญ (ตัวนี้สำคัญ!)
+        function updateAnnouncements() {
+            const container = document.getElementById('announcements-container');
+            container.innerHTML = '';
+
+            ANNOUNCEMENTS.forEach((announcement, index) => {
+                const colorClasses = {
+                    blue: { bg: 'from-blue-50 to-indigo-50', border: 'border-blue-500', icon: 'bg-blue-500' },
+                    green: { bg: 'from-green-50 to-emerald-50', border: 'border-green-500', icon: 'bg-green-500' },
+                    yellow: { bg: 'from-yellow-50 to-amber-50', border: 'border-yellow-500', icon: 'bg-yellow-500' },
+                    red: { bg: 'from-red-50 to-rose-50', border: 'border-red-500', icon: 'bg-red-500' }
+                };
+
+                const colors = colorClasses[announcement.color] || colorClasses.blue;
+                
+                const announcementHTML = `
+                    <div class="announcement-item bg-gradient-to-br ${colors.bg} p-4 rounded-xl border-l-4 ${colors.border}" 
+                         style="animation-delay: ${index * 0.1}s">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 ${colors.icon} text-white rounded-full flex items-center justify-center">
+                                    <i class="fas fa-${announcement.icon} text-sm"></i>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <h4 class="font-semibold text-gray-800 mb-1">${announcement.title}</h4>
+                                <p class="text-sm text-gray-600 mb-2">${announcement.detail}</p>
+                                <a href="${announcement.link}" 
+                                   class="text-sm text-${announcement.color}-600 hover:text-${announcement.color}-800 font-medium">
+                                    ${announcement.type === 'calendar' ? 'ดาวน์โหลด PDF →' : 
+                                      announcement.type === 'trophy' ? 'ดูรายละเอียด →' : 'อ่านเพิ่มเติม →'}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', announcementHTML);
+            });
+        }
+
+        // Update Quick Links
+        function updateQuickLinks() {
+            const container = document.getElementById('quick-links-container');
+            container.innerHTML = '';
+
+            Object.entries(QUICK_LINKS).forEach(([key, link]) => {
+                const linkHTML = `
+                    <a href="${link.url}" target="_blank" 
+                       class="quick-link bg-white p-4 rounded-xl text-center hover:shadow-lg">
+                        <div class="text-3xl mb-2 text-${link.color}-600">
+                            <i class="fas fa-${link.icon}"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-700">${link.name}</p>
+                    </a>
+                `;
+                container.insertAdjacentHTML('beforeend', linkHTML);
+            });
+        }
+
+        // Update Download Center
+        function updateDownloadCenter() {
+            const container = document.getElementById('download-center');
+            container.innerHTML = '';
+
+            Object.entries(DOWNLOAD_FILES).forEach(([key, category]) => {
+                const categoryHTML = `
+                    <div class="bg-white rounded-xl p-4">
+                        <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
+                            <i class="fas fa-${category.icon} text-${category.color}-500 mr-2"></i>
+                            ${category.title}
+                        </h4>
+                        <div class="space-y-2">
+                            ${category.items.map(item => `
+                                <a href="${item.link}" 
+                                   class="download-item flex items-center justify-between p-2 rounded-lg hover:cursor-pointer"
+                                   onclick="handleDownload(event, '${item.name}')">
+                                    <span class="text-sm flex items-center">
+                                        <i class="fas fa-${item.icon} text-red-500 mr-2"></i>
+                                        ${item.name}
+                                    </span>
+                                    <i class="fas fa-arrow-down text-gray-400"></i>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', categoryHTML);
+            });
+        }
+
+        // Handle Download
+        function handleDownload(event, fileName) {
+            event.preventDefault();
+            alert(`กำลังดาวน์โหลดไฟล์: ${fileName}\n\nหมายเหตุ: ในระบบจริง ให้ใส่ลิงก์ไฟล์ PDF ที่ href ของแต่ละรายการ`);
+        }
+
+        // Update วันที่
+        function updateDate() {
+            const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 
+                          'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+            const today = new Date();
+            const thaiYear = today.getFullYear() + 543;
+            const dateStr = `${today.getDate()} ${months[today.getMonth()]} ${thaiYear}`;
+            
+            const updateDateEl = document.getElementById('update-date');
+            const currentYearEl = document.getElementById('current-year');
+            
+            if(updateDateEl) updateDateEl.textContent = dateStr;
+            if(currentYearEl) currentYearEl.textContent = thaiYear;
+        }
+
         // Modal Functions
         function showModal(department) {
             const modal = document.getElementById('modal-' + department);
@@ -1456,34 +1422,25 @@ const NEWS_TICKER = [
             });
         });
         
-        // Auto update current year
+        // ===========================================
+        // เริ่มต้นระบบ - Load หน้าเว็บ
+        // ===========================================
         document.addEventListener('DOMContentLoaded', function() {
-            const year = new Date().getFullYear();
-            const copyrightElements = document.querySelectorAll('footer p');
-            copyrightElements.forEach(el => {
-                el.innerHTML = el.innerHTML.replace('2024', year);
-            });
+            // Update ข้อมูลทั้งหมด
+            updateSchoolInfo();
+            updateNewsTicker();
+            updateAnnouncements();  // ← สำคัญ! ตัวนี้จะทำให้ประกาศแสดงผล
+            updateQuickLinks();
+            updateDownloadCenter();
+            updateDate();
             
-            // Update announcement date to current date
-            const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 
-                          'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
-            const today = new Date();
-            const thaiYear = today.getFullYear() + 543;
-            const dateStr = `${today.getDate()} ${months[today.getMonth()]} ${thaiYear}`;
-            const updateDateEl = document.getElementById('update-date');
-            if(updateDateEl) {
-                updateDateEl.textContent = dateStr;
-            }
-            
-            // Handle download links
-            document.querySelectorAll('.download-item').forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    // แสดงข้อความแจ้งเตือน
-                    alert('กำลังดาวน์โหลดไฟล์...\n\nหมายเหตุ: ในระบบจริง ให้ใส่ลิงก์ไฟล์ PDF ที่ href ของแต่ละรายการ');
-                });
-            });
-            
+            // Loading animation
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s';
+                document.body.style.opacity = '1';
+            }, 100);
+
             // News ticker pause on hover
             const ticker = document.querySelector('.news-ticker');
             if(ticker) {
@@ -1509,15 +1466,174 @@ const NEWS_TICKER = [
                 }
             });
         });
-        
-        // Add loading animation
-        window.addEventListener('load', function() {
-            document.body.style.opacity = '0';
-            setTimeout(() => {
-                document.body.style.transition = 'opacity 0.5s';
-                document.body.style.opacity = '1';
-            }, 100);
+
+        // ===========================================
+        // ฟังก์ชันสำหรับงานโสตฯ - เพิ่ม/แก้ไขข้อมูล
+        // ===========================================
+
+        // เพิ่มประกาศใหม่
+        function addAnnouncement(title, detail, color = 'blue', icon = 'info', link = '#') {
+            ANNOUNCEMENTS.push({
+                type: icon,
+                title: title,
+                detail: detail,
+                link: link,
+                color: color,
+                icon: icon
+            });
+            updateAnnouncements(); // Refresh การแสดงผล
+            console.log('✅ เพิ่มประกาศใหม่สำเร็จ:', title);
+        }
+
+        // แก้ไขประกาศ (ตำแหน่งเริ่มจาก 0)
+        function editAnnouncement(index, title, detail, color, icon, link) {
+            if (ANNOUNCEMENTS[index]) {
+                ANNOUNCEMENTS[index] = {
+                    type: icon,
+                    title: title,
+                    detail: detail,
+                    link: link || '#',
+                    color: color || 'blue',
+                    icon: icon || 'info'
+                };
+                updateAnnouncements(); // Refresh การแสดงผล
+                console.log('✅ แก้ไขประกาศสำเร็จ:', title);
+            } else {
+                console.log('❌ ไม่พบประกาศที่ต้องการแก้ไข');
+            }
+        }
+
+        // ลบประกาศ
+        function deleteAnnouncement(index) {
+            if (ANNOUNCEMENTS[index]) {
+                const deletedTitle = ANNOUNCEMENTS[index].title;
+                ANNOUNCEMENTS.splice(index, 1);
+                updateAnnouncements(); // Refresh การแสดงผล
+                console.log('✅ ลบประกาศสำเร็จ:', deletedTitle);
+            } else {
+                console.log('❌ ไม่พบประกาศที่ต้องการลบ');
+            }
+        }
+
+        // เพิ่มข่าวแถบวิ่ง
+        function addNewsTicker(news) {
+            NEWS_TICKER.push(news);
+            updateNewsTicker(); // Refresh การแสดงผล
+            console.log('✅ เพิ่มข่าวใหม่สำเร็จ:', news);
+        }
+
+        // แก้ไข Quick Link
+        function editQuickLink(key, name, url, icon, color) {
+            if (QUICK_LINKS[key]) {
+                QUICK_LINKS[key] = { name, url, icon, color };
+                updateQuickLinks(); // Refresh การแสดงผล
+                console.log('✅ แก้ไข Quick Link สำเร็จ:', name);
+            } else {
+                console.log('❌ ไม่พบ Quick Link ที่ต้องการแก้ไข');
+            }
+        }
+
+        // เพิ่มไฟล์ดาวน์โหลดใหม่
+        function addDownloadFile(categoryKey, fileName, fileLink, fileIcon = 'file-pdf') {
+            if (DOWNLOAD_FILES[categoryKey]) {
+                DOWNLOAD_FILES[categoryKey].items.push({
+                    name: fileName,
+                    link: fileLink,
+                    icon: fileIcon
+                });
+                updateDownloadCenter(); // Refresh การแสดงผล
+                console.log('✅ เพิ่มไฟล์ดาวน์โหลดใหม่สำเร็จ:', fileName);
+            } else {
+                console.log('❌ ไม่พบหมวดหมู่ที่ต้องการ');
+                console.log('หมวดหมู่ที่มี:', Object.keys(DOWNLOAD_FILES));
+            }
+        }
+
+        // ===========================================
+        // คำสั่งสำหรับงานโสตฯ (พิมพ์ใน Console)
+        // ===========================================
+        console.log(`
+🎯 คำสั่งสำหรับงานโสตฯ - ใช้ใน Console:
+
+📢 การจัดการประกาศ:
+• addAnnouncement('หัวข้อ', 'รายละเอียด', 'blue', 'info', '#')
+• editAnnouncement(0, 'หัวข้อใหม่', 'รายละเอียดใหม่', 'green', 'calendar', '#')
+• deleteAnnouncement(0)
+
+📺 การจัดการข่าว:
+• addNewsTicker('📢 ข่าวใหม่...')
+
+🔗 การจัดการ Quick Links:
+• editQuickLink('obec', 'ชื่อใหม่', 'https://url.com', 'icon', 'color')
+
+📁 การจัดการไฟล์ดาวน์โหลด:
+• addDownloadFile('forms', 'ชื่อไฟล์', 'https://link.com', 'file-pdf')
+• หมวดหมู่: 'forms', 'student', 'manual'
+
+🏫 การจัดการข้อมูลโรงเรียน:
+• แก้ไขใน SCHOOL_INFO object แล้วเรียก updateSchoolInfo()
+
+💡 ตัวอย่าง:
+addAnnouncement('ประกาศสำคัญ', 'รายละเอียดประกาศ', 'red', 'alert', '#')
+        `);
+
+        // Keyboard shortcuts for admin
+        document.addEventListener('keydown', function(e) {
+            // Ctrl + Shift + A = เพิ่มประกาศด่วน
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                e.preventDefault();
+                const title = prompt('หัวข้อประกาศ:');
+                const detail = prompt('รายละเอียด:');
+                if (title && detail) {
+                    addAnnouncement(title, detail);
+                }
+            }
+            
+            // Ctrl + Shift + N = เพิ่มข่าว
+            if (e.ctrlKey && e.shiftKey && e.key === 'N') {
+                e.preventDefault();
+                const news = prompt('ข่าวใหม่:');
+                if (news) {
+                    addNewsTicker(news);
+                }
+            }
+            
+            // Ctrl + Shift + D = ดู Console Commands
+            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                e.preventDefault();
+                console.log(`
+🎯 คำสั่งลัด:
+• Ctrl + Shift + A = เพิ่มประกาศด่วน
+• Ctrl + Shift + N = เพิ่มข่าว
+• Ctrl + Shift + D = แสดงคำสั่งนี้
+• F12 = เปิด Developer Console
+                `);
+            }
         });
+
+        // Export functions for global access
+        window.schoolPortal = {
+            addAnnouncement,
+            editAnnouncement,
+            deleteAnnouncement,
+            addNewsTicker,
+            editQuickLink,
+            addDownloadFile,
+            updateSchoolInfo,
+            updateAnnouncements,
+            updateQuickLinks,
+            updateDownloadCenter,
+            updateNewsTicker,
+            CLOUD_LINKS,
+            SCHOOL_INFO,
+            ANNOUNCEMENTS,
+            NEWS_TICKER,
+            QUICK_LINKS,
+            DOWNLOAD_FILES
+        };
+
+        console.log('✅ School Portal System พร้อมใช้งาน!');
+        console.log('💡 พิมพ์ schoolPortal ใน console เพื่อดู functions ทั้งหมด');
     </script>
 
 </body>
